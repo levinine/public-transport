@@ -18,7 +18,7 @@ public interface StationService {
 
     List<Stop> findNearestForAllLines(PassengerState state);
 
-    RoutesDto search(String[] startCoords, String[] endCoords, String[] time);
+    RoutesDto search(String[] startCoords, String[] endCoords, int hours, int minutes);
 
     void initData();
 }
