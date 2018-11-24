@@ -1,12 +1,11 @@
 package com.factory.service;
 
 import com.factory.common.AppConfig;
+import com.factory.dto.CoordinateDto;
+import com.factory.dto.LineDto;
 import com.factory.dto.RouteDto;
 import com.factory.dto.RoutesDto;
-import com.factory.model.CityData;
-import com.factory.model.Coordinate;
-import com.factory.model.Line;
-import com.factory.model.Stop;
+import com.factory.model.*;
 import com.factory.problem.AStarSearch;
 import com.factory.problem.Solution;
 import com.factory.problem.TransportProblem;
@@ -35,6 +34,8 @@ public class StationServiceImpl implements StationService {
 
     private CityData cityData;
 
+    private ZoneData zoneData;
+
     private Map<String, Stop> stationIndexByCoords;
 
     private Map<String, List<Stop>> stationIndexByLine;
@@ -50,7 +51,8 @@ public class StationServiceImpl implements StationService {
     }
 
     public void initData() {
-        loadData();
+        loadLines();
+        loadZones();
         indexStationsByCoords();
         indexLinesByName();
         indexStationsByLines();
@@ -124,14 +126,14 @@ public class StationServiceImpl implements StationService {
         return endLat + ", " + endLon;
     }
 
-    private void loadData() {
+    private void loadLines() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters()
                 .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
         HttpEntity entity = new HttpEntity(requestHeaders);
-        ResponseEntity<String> response = restTemplate.exchange(appConfig.getApi(), HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(appConfig.getLines(), HttpMethod.GET, entity, String.class);
         Gson g = new Gson();
         cityData = g.fromJson(response.getBody(), CityData.class);
         Set<String> stops = new HashSet<>();
@@ -142,6 +144,18 @@ public class StationServiceImpl implements StationService {
             stops.add(stop.getName());
             return true;
         }).collect(Collectors.toList()));
+    }
+
+    private void loadZones() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getMessageConverters()
+                .add(0, new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpEntity entity = new HttpEntity(requestHeaders);
+        ResponseEntity<String> response = restTemplate.exchange(appConfig.getZones(), HttpMethod.GET, entity, String.class);
+        Gson g = new Gson();
+        zoneData = g.fromJson(response.getBody(), ZoneData.class);
     }
 
     @Override
@@ -213,8 +227,8 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public RoutesDto search(String[] startCoords, String[] endCoords, int hours, int minutes) {
-        TransportProblem problem = new TransportProblem(startCoords[0], startCoords[1],
-                endCoords[0], endCoords[1], this);
+        TransportProblem problem = new TransportProblem(startCoords[1], startCoords[0],
+                endCoords[1], endCoords[0], this);
         TransportProblem.startTime = ((Double) ((hours + minutes / 60.0) * 3600000)).longValue();
         AStarSearch search = new AStarSearch(this);
 
@@ -223,5 +237,27 @@ public class StationServiceImpl implements StationService {
 
         solutions.stream().forEach(solution -> routes.add(solution.toRouteDto()));
         return new RoutesDto(routes);
+    }
+
+
+    @Override
+    public Double getZoneCost(String zoneName) {
+        for (Zone zone : zoneData.getZones()) {
+            if (zone.getName().equals(zoneName)) {
+                return zone.getPrice();
+            }
+        }
+
+        return 0D;
+    }
+
+    @Override
+    public List<LineDto> findAllLines() {
+        return cityData.getLines().stream().map(line -> {
+            LineDto lineDto = new LineDto();
+            lineDto.setName(line.getName());
+            line.getCoordinates().stream().forEach(coordinate -> lineDto.getCoordinates().add(new CoordinateDto(Double.parseDouble(coordinate.getLat()), Double.parseDouble(coordinate.getLon()))));
+            return lineDto;
+        }).collect(Collectors.toList());
     }
 }

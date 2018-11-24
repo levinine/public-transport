@@ -18,4 +18,8 @@ public class Line {
     private List<Coordinate> coordinates;
 
     private List<String> timeTable;
+
+    private List<String> timeTableSaturday;
+
+    private List<String> timeTableSunday;
 }

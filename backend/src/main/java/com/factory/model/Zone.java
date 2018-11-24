@@ -1,4 +1,4 @@
-package com.factory.dto;
+package com.factory.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoordinateDto {
+public class Zone {
 
-    private Double lat;
+    private String name;
 
-    private Double lon;
+    private double price;
 }

@@ -1,5 +1,6 @@
 package com.factory.service;
 
+import com.factory.dto.LineDto;
 import com.factory.dto.RoutesDto;
 import com.factory.model.Line;
 import com.factory.model.Stop;
@@ -21,4 +22,8 @@ public interface StationService {
     RoutesDto search(String[] startCoords, String[] endCoords, int hours, int minutes);
 
     void initData();
+
+    Double getZoneCost(String zone);
+
+    List<LineDto> findAllLines();
 }

@@ -46,7 +46,7 @@ public class TransportProblem {
                         String.format("Ride from station [%s], to station [%s], on line [%s]",
                                 state.getStation().getName(), lineStop.getValue().getName(), lineStop.getKey().getName()),
                         state.getLat(), state.getLon(), lineStop.getValue().getLat(), lineStop.getValue().getLon(), lineStop.getKey(),
-                        state.getStation().getName(), lineStop.getValue().getName());
+                        state.getStation().getName(), lineStop.getValue().getName(), stationService.getZoneCost(lineStop.getValue().getZone()));
                 PassengerState nextState = action.execute(state);
                 result.add(new Pair<>(action, nextState));
             });
@@ -54,6 +54,11 @@ public class TransportProblem {
     }
 
     private void addWalkSuccessors(PassengerState state, List<Pair<MoveAction, PassengerState>> result) {
+        if (state.getStation() != null) {
+            WalkAction action = new WalkAction(stationService, "Walk to goal", state.getLat(), state.getLon(), endLat, endLon);
+            result.add(new Pair<>(action, action.execute(state)));
+            return;
+        }
         stationService.findNearestForAllLines(state).forEach(stop -> {
             if (state.getStation() != null && state.getStation() == stop) {
                 return;

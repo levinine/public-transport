@@ -28,6 +28,8 @@ public abstract class MoveAction {
 
     protected String endingStation;
 
+    protected Double price;
+
     public PassengerState execute(PassengerState state) {
         PassengerState newState = (PassengerState) state.clone();
         newState.setLat(endLat);

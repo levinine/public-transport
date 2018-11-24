@@ -18,4 +18,6 @@ public class Stop {
     private String lon;
 
     private List<String> lines;
+
+    private String zone;
 }

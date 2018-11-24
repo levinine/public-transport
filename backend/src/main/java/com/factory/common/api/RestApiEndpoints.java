@@ -7,4 +7,6 @@ public class RestApiEndpoints {
     public static final String DATA = API_ROOT + "/data";
 
     public static final String ROUTES = API_ROOT + "/routes";
+
+    public static final String LINES = API_ROOT + "/lines";
 }
