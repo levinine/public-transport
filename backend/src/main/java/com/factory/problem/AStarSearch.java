@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AStarSearch {
 
-    private static final int MAX_QUEUE_SIZE = 10000;
+    private static final int MAX_QUEUE_SIZE = 300000;
 
     private StationService stationService;
 

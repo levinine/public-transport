@@ -1,6 +1,8 @@
 package com.factory.service;
 
 import com.factory.common.AppConfig;
+import com.factory.dto.CoordinateDto;
+import com.factory.dto.LineDto;
 import com.factory.dto.RouteDto;
 import com.factory.dto.RoutesDto;
 import com.factory.model.*;
@@ -235,5 +237,27 @@ public class StationServiceImpl implements StationService {
 
         solutions.stream().forEach(solution -> routes.add(solution.toRouteDto()));
         return new RoutesDto(routes);
+    }
+
+
+    @Override
+    public Double getZoneCost(String zoneName) {
+        for (Zone zone : zoneData.getZones()) {
+            if (zone.getName().equals(zoneName)) {
+                return zone.getPrice();
+            }
+        }
+
+        return 0D;
+    }
+
+    @Override
+    public List<LineDto> findAllLines() {
+        return cityData.getLines().stream().map(line -> {
+            LineDto lineDto = new LineDto();
+            lineDto.setName(line.getName());
+            line.getCoordinates().stream().forEach(coordinate -> lineDto.getCoordinates().add(new CoordinateDto(Double.parseDouble(coordinate.getLat()), Double.parseDouble(coordinate.getLon()))));
+            return lineDto;
+        }).collect(Collectors.toList());
     }
 }

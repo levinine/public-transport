@@ -11,6 +11,7 @@ import com.factory.problem.state.PassengerState;
 import com.factory.util.Pair;
 import com.google.common.collect.Sets;
 import lombok.Data;
+import org.apache.commons.math3.util.Precision;
 
 import java.util.HashSet;
 import java.util.List;
@@ -64,7 +65,8 @@ public class Solution {
 
     public RouteDto toRouteDto() {
         RouteDto routeDto = new RouteDto();
-        routeDto.setEstimatedTime(actions.get(actions.size() - 1).getValue().getTimeElapsed() * 60);
+        routeDto.setEstimatedTime(Precision.round(actions.get(actions.size() - 1).getValue().getTimeElapsed() * 60, 2));
+        double totalCost = 0;
 
         for (int i = 0; i < actions.size(); i++) {
             Pair<MoveAction, PassengerState> action = actions.get(i);
@@ -89,19 +91,22 @@ public class Solution {
 
                 routeDto.getActivities().add(mapPublicTransportActionToActivityDto(currentAction, actions.get(lastStationIndex).getKey(), totalEstimatedTime, lastStationIndex - i));
                 i = lastStationIndex;
+                totalCost += actions.get(i).getKey().getPrice();
             }
         }
+
+        routeDto.setTotalCost(totalCost);
         return routeDto;
     }
 
     private ActivityDto mapPublicTransportActionToActivityDto(MoveAction startingStation, MoveAction endingStation, double totalEstimatedTime, int numberOfStations) {
         ActivityDto activityDto = new ActivityDto();
-        activityDto.setEstimatedTime(totalEstimatedTime);
+        activityDto.setEstimatedTime(Precision.round(totalEstimatedTime, 2));
         activityDto.setLine(startingStation.getLineNumber());
         activityDto.setStartStation(startingStation.getStartingStation());
         activityDto.setEndStation(endingStation.getEndingStation());
-        activityDto.setStartCoordinate(new CoordinateDto(startingStation.getStartLat(), startingStation.getStartLon()));
-        activityDto.setEndCoordinate(new CoordinateDto(endingStation.getEndLat(), endingStation.getEndLon()));
+        activityDto.setStartCoordinate(new CoordinateDto(Double.parseDouble(startingStation.getStartLat()), Double.parseDouble(startingStation.getStartLon())));
+        activityDto.setEndCoordinate(new CoordinateDto(Double.parseDouble(endingStation.getEndLat()), Double.parseDouble(endingStation.getEndLon())));
         activityDto.setNumberOfStations(numberOfStations);
         activityDto.setType(2);
         return activityDto;
@@ -109,12 +114,12 @@ public class Solution {
 
     private ActivityDto mapWalkActionToActivityDto(MoveAction action) {
         ActivityDto activityDto = new ActivityDto();
-        activityDto.setEstimatedTime(action.timeCost() * 60);
+        activityDto.setEstimatedTime(Precision.round(action.timeCost() * 60, 2));
         activityDto.setLine(null);
         activityDto.setStartStation(null);
         activityDto.setEndStation(null);
-        activityDto.setStartCoordinate(new CoordinateDto(action.getStartLat(), action.getStartLon()));
-        activityDto.setEndCoordinate(new CoordinateDto(action.getEndLat(), action.getEndLon()));
+        activityDto.setStartCoordinate(new CoordinateDto(Double.parseDouble(action.getStartLat()), Double.parseDouble(action.getStartLon())));
+        activityDto.setEndCoordinate(new CoordinateDto(Double.parseDouble(action.getEndLat()), Double.parseDouble(action.getEndLon())));
         activityDto.setNumberOfStations(null);
         activityDto.setType(1);
         return activityDto;

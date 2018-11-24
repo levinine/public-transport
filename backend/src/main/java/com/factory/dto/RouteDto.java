@@ -17,6 +17,9 @@ public class RouteDto {
     @JsonProperty(RestApiConstants.ESTIMATED_TIME)
     private double estimatedTime;
 
+    @JsonProperty(RestApiConstants.TOTAL_COST)
+    private double totalCost;
+
     @JsonProperty(RestApiConstants.ACTIVITIES)
     private List<ActivityDto> activities = new ArrayList<>();
 }

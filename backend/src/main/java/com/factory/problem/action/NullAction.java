@@ -6,7 +6,7 @@ import com.factory.service.StationService;
 public class NullAction extends MoveAction {
 
     public NullAction(StationService service) {
-        super(service, "No Action", "0", "0", "0", "0", null, null, null);
+        super(service, "No Action", "0", "0", "0", "0", null, null, null, null);
     }
 
     @Override
