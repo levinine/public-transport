@@ -11,7 +11,7 @@ import { SuggestedRoutesComponent } from './suggested-routes/suggested-routes.co
   declarations: [
     AppComponent,
     MainComponent,
-    SuggestedRoutesComponent
+    SuggestedRoutesComponent,
   ],
   imports: [
     BrowserModule,

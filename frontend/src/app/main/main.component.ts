@@ -24,7 +24,7 @@ import Fill from 'ol/style/Fill';
 })
 export class MainComponent implements OnInit {
 
-  //Novi Sad coordinates
+  // Novi Sad coordinates
   latitude: number = 45.26060794;
   longitude: number = 19.83221305;
   zoomSize: number = 16;
@@ -34,6 +34,7 @@ export class MainComponent implements OnInit {
   model = {
     'startCoords': null,
     'endCoords': null,
+    'datePicker': null
   };
 
   showDirections = true;
@@ -127,6 +128,7 @@ export class MainComponent implements OnInit {
         this.drawBusStation(activity.startCoord.lon, activity.startCoord.lat, activity.startingStation);
         this.drawBusStation(activity.endCoord.lon, activity.endCoord.lat, activity.endingStation);
       }
+      console.log("Date: " + this.model.datePicker);
     }
   }
 
