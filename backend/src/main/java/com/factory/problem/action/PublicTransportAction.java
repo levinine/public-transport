@@ -12,8 +12,9 @@ public class PublicTransportAction extends MoveAction {
 
     private double waitTime = 0;
 
-    public PublicTransportAction(StationService stationService, String description, String startLat, String startLon, String endLat, String endLon, Line line) {
-        super(stationService, description, startLat, startLon, endLat, endLon);
+    public PublicTransportAction(StationService stationService, String description, String startLat, String startLon,
+                                 String endLat, String endLon, Line line, String startingStation, String endingStation) {
+        super(stationService, description, startLat, startLon, endLat, endLon, line.getName(), startingStation, endingStation);
         this.line = line;
     }
 

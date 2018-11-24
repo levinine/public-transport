@@ -2,4 +2,4 @@ server:
   port: 9090
 
 factory:
-  api: https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/2.json
+  api: https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/1.json

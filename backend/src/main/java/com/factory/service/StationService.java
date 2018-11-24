@@ -1,5 +1,6 @@
 package com.factory.service;
 
+import com.factory.dto.RoutesDto;
 import com.factory.model.Line;
 import com.factory.model.Stop;
 import com.factory.problem.state.PassengerState;
@@ -17,7 +18,7 @@ public interface StationService {
 
     List<Stop> findNearestForAllLines(PassengerState state);
 
-    void search(String[] startCoords, String[] endCoords, String[] time);
+    RoutesDto search(String[] startCoords, String[] endCoords, String[] time);
 
     void initData();
 }

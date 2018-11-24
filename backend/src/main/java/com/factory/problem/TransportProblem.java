@@ -45,7 +45,8 @@ public class TransportProblem {
                 MoveAction action = new PublicTransportAction(stationService,
                         String.format("Ride from station [%s], to station [%s], on line [%s]",
                                 state.getStation().getName(), lineStop.getValue().getName(), lineStop.getKey().getName()),
-                        state.getLat(), state.getLon(), lineStop.getValue().getLat(), lineStop.getValue().getLon(), lineStop.getKey());
+                        state.getLat(), state.getLon(), lineStop.getValue().getLat(), lineStop.getValue().getLon(), lineStop.getKey(),
+                        state.getStation().getName(), lineStop.getValue().getName());
                 PassengerState nextState = action.execute(state);
                 result.add(new Pair<>(action, nextState));
             });

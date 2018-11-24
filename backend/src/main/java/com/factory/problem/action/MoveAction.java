@@ -22,6 +22,12 @@ public abstract class MoveAction {
 
     protected String endLon;
 
+    protected String lineNumber;
+
+    protected String startingStation;
+
+    protected String endingStation;
+
     public PassengerState execute(PassengerState state) {
         PassengerState newState = (PassengerState) state.clone();
         newState.setLat(endLat);

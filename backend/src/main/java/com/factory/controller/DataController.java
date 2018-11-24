@@ -2,9 +2,13 @@ package com.factory.controller;
 
 import com.factory.common.api.RestApiEndpoints;
 import com.factory.dto.RefreshDto;
+import com.factory.dto.RoutesDto;
 import com.factory.service.StationService;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -19,17 +23,16 @@ public class DataController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE, value = "/refresh")
-    public String refresh(@RequestBody RefreshDto refreshDto) {
+    public RoutesDto refresh(@RequestBody RefreshDto refreshDto) {
         stationService.initData();
 
         if (isRefreshOnly(refreshDto)) {
-            return "Refresh only";
+            return new RoutesDto();
         } else {
             String[] startCoordinates = refreshDto.getStart().split(",");
             String[] endCoordinates = refreshDto.getEnd().split(",");
             String[] time = refreshDto.getDate().split(":");
-            stationService.search(startCoordinates, endCoordinates, time);
-            return "Refresh + calculate routes";
+            return stationService.search(startCoordinates, endCoordinates, time);
         }
     }
 

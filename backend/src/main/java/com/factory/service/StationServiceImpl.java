@@ -1,11 +1,14 @@
 package com.factory.service;
 
 import com.factory.common.AppConfig;
+import com.factory.dto.RouteDto;
+import com.factory.dto.RoutesDto;
 import com.factory.model.CityData;
 import com.factory.model.Coordinate;
 import com.factory.model.Line;
 import com.factory.model.Stop;
 import com.factory.problem.AStarSearch;
+import com.factory.problem.Solution;
 import com.factory.problem.TransportProblem;
 import com.factory.problem.state.PassengerState;
 import com.factory.util.Pair;
@@ -209,7 +212,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void search(String[] startCoords, String[] endCoords, String[] time) {
+    public RoutesDto search(String[] startCoords, String[] endCoords, String[] time) {
         int hours = Integer.valueOf(time[0]);
         int minutes = Integer.valueOf(time[1]);
 
@@ -218,6 +221,10 @@ public class StationServiceImpl implements StationService {
         TransportProblem.startTime = ((Double) ((hours + minutes / 60.0) * 3600000)).longValue();
         AStarSearch search = new AStarSearch(this);
 
-        search.search(problem, 3);
+        List<Solution> solutions = search.search(problem, 3);
+        List<RouteDto> routes = new ArrayList<>();
+
+        solutions.stream().forEach(solution -> routes.add(solution.toRouteDto()));
+        return new RoutesDto(routes);
     }
 }
