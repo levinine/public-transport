@@ -4,10 +4,7 @@ import com.factory.common.api.RestApiEndpoints;
 import com.factory.common.api.RestApiRequestParams;
 import com.factory.dto.RoutesDto;
 import com.factory.service.StationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
