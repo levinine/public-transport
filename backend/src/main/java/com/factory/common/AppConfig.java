@@ -7,5 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("factory")
 public class AppConfig {
 
-    String api;
+    String lines;
+
+    String zones;
 }
