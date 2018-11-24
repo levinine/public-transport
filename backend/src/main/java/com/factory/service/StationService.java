@@ -18,4 +18,6 @@ public interface StationService {
     List<Stop> findNearestForAllLines(PassengerState state);
 
     void search(String[] startCoords, String[] endCoords, String[] time);
+
+    void initData();
 }

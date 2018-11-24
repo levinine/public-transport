@@ -43,6 +43,10 @@ public class StationServiceImpl implements StationService {
     public StationServiceImpl(AppConfig appConfig) {
         this.appConfig = appConfig;
 
+        initData();
+    }
+
+    public void initData() {
         loadData();
         indexStationsByCoords();
         indexLinesByName();
