@@ -12,14 +12,17 @@ export class RoutesService {
 
   constructor(private http: HttpClient) { }
 
-  getRoutesMock():  Observable<any> {
-    return of (ROUTES.routes);
-  }
-
   getRoutes(start: String, end: String, date: String):  Observable<any> {
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
       // @ts-ignore
       return this.http.get(`${API_URL}/routes?start=${start}&end=${end}&date=${date}`, headers);
+  }
+
+  getLines() {
+      let headers = new Headers();
+      headers.append('Content-Type', 'application/json');
+      // @ts-ignore
+      return this.http.get(`${API_URL}/lines`, headers);
   }
 }

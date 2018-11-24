@@ -44,18 +44,7 @@ export class MainComponent implements OnInit {
   vectorSource = new VectorSource()
 
   // TODO Delete this after finishing API
-  lines = [
-      {
-        name: '1A'
-      },
-      {
-        name: '7B'
-      },
-      {
-        name: '4A'
-      }
-      
-  ];
+  lines = [];
 
   constructor(private routesService: RoutesService) { }
 
@@ -92,6 +81,8 @@ export class MainComponent implements OnInit {
         console.log('You have already selected two markers');
       }
     });
+
+    this.getLines();
   }
 
   changeTab(tabname: string): void {
@@ -100,14 +91,29 @@ export class MainComponent implements OnInit {
   }
 
   getRoutes() {
-    console.log(this.model.datePicker)
     this.routesService.getRoutes(this.model.startCoords,
         this.model.endCoords,
-        this.model.datePicker).subscribe(response => {
-          console.log(response)
-      // this.routes = response;
-      // this.drawRoute(0);
-    });
+        this.model.datePicker).subscribe(
+          data => {
+            this.routes = data.routes;
+            console.log(data);
+          },
+          error => { console.log(error) },
+        () => {
+            this.drawRoute(0)
+          }
+      );
+  }
+
+  getLines() {
+    this.routesService.getLines().subscribe(
+        data => {
+          this.lines = data;
+        },
+        error => {
+            console.log(error)
+        }
+    )
   }
 
   drawMarker(coordinates) {
@@ -144,7 +150,6 @@ export class MainComponent implements OnInit {
         this.drawBusStation(activity.startCoord.lon, activity.startCoord.lat, activity.startingStation);
         this.drawBusStation(activity.endCoord.lon, activity.endCoord.lat, activity.endingStation);
       }
-      console.log("Date: " + this.model.datePicker);
     }
   }
 
@@ -211,6 +216,20 @@ export class MainComponent implements OnInit {
     busStation.setStyle(busStationStyle);
     // add bus station to the layer
     this.vectorSource.addFeature(busStation);
+  }
+  
+  drawBusLine(lineName: String) {
+    for (let line of this.lines) {
+      if (line.name === lineName) {
+        console.log(line);
+          for (let i = 0; i < line.coordinates.length - 2; i++) {
+            console.log("entered");
+              let start = fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]);
+              let end = fromLonLat([line.coordinates[i + 1].lon, line.coordinates[i + 1].lat]);
+              this.drawLine(start, end, 2);
+          }
+      }
+    }
   }
 
   onRouteSelection(routeIndex: number) {

@@ -24,13 +24,13 @@
           <div class="form-group row search-item">
             <label for="start" class="col-12 col-xl-2 col-form-label">Start</label>
             <div class="col-12 col-xl-10">
-              <input type="text" id="start" readonly class="form-control" [(ngModel)]="model.startCoords" required name="start" #start="ngModel" placeholder="Choose starting point">
+              <input type="text" id="start" class="form-control" [(ngModel)]="model.startCoords" required name="start" #start="ngModel" placeholder="Choose starting point">
             </div>
           </div>
           <div class="form-group row search-item">
             <label for="end" class="col-12 col-xl-2 col-form-label">End</label>
             <div class="col-12 col-xl-10">
-              <input type="text" id="end" readonly class="form-control" [(ngModel)]="model.endCoords" required name="end" #end="ngModel" placeholder="Choose destination">
+              <input type="text" id="end" class="form-control" [(ngModel)]="model.endCoords" required name="end" #end="ngModel" placeholder="Choose destination">
             </div>
           </div>
           <div class="form-group row search-item">
@@ -47,7 +47,17 @@
         </div>
       </div>
     </div>
-    <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
+    <div>
+      <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
+    </div>
+    <div *ngIf="showLines">
+      <div class="col-12 col-xl-12 button-holder">
+        <button (click)="clearMap()" class="search-button">Clear</button>
+      </div>
+      <div class="line" *ngFor="let line of lines" (click)="drawBusLine(line.name)">
+        {{ line.name }}
+      </div>
+    </div>
   </div>
   <div class="col-12 col-md-9 map-content">
     <div class="legend">
