@@ -86,10 +86,12 @@ public class Solution {
                     if (tempAction instanceof PublicTransportAction && currentAction.getLineNumber().equals(tempAction.getLineNumber())) {
                         totalEstimatedTime += tempAction.timeCost() * 60;
                         lastStationIndex = j;
+                    } else {
+                        break;
                     }
                 }
 
-                routeDto.getActivities().add(mapPublicTransportActionToActivityDto(currentAction, actions.get(lastStationIndex).getKey(), totalEstimatedTime, lastStationIndex - i));
+                routeDto.getActivities().add(mapPublicTransportActionToActivityDto(currentAction, actions.get(lastStationIndex).getKey(), totalEstimatedTime, lastStationIndex - i + 1));
                 i = lastStationIndex;
                 totalCost += actions.get(i).getKey().getPrice();
             }

@@ -2,5 +2,5 @@ server:
   port: 9090
 
 factory:
-  lines: https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/1.json
+  lines: https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/lines
   zones: https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/zones

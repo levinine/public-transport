@@ -54,6 +54,11 @@ public class TransportProblem {
     }
 
     private void addWalkSuccessors(PassengerState state, List<Pair<MoveAction, PassengerState>> result) {
+        if (state.getStation() != null) {
+            WalkAction action = new WalkAction(stationService, "Walk to goal", state.getLat(), state.getLon(), endLat, endLon);
+            result.add(new Pair<>(action, action.execute(state)));
+            return;
+        }
         stationService.findNearestForAllLines(state).forEach(stop -> {
             if (state.getStation() != null && state.getStation() == stop) {
                 return;
