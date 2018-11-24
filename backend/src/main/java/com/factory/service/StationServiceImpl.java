@@ -212,10 +212,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public RoutesDto search(String[] startCoords, String[] endCoords, String[] time) {
-        int hours = Integer.valueOf(time[0]);
-        int minutes = Integer.valueOf(time[1]);
-
+    public RoutesDto search(String[] startCoords, String[] endCoords, int hours, int minutes) {
         TransportProblem problem = new TransportProblem(startCoords[0], startCoords[1],
                 endCoords[0], endCoords[1], this);
         TransportProblem.startTime = ((Double) ((hours + minutes / 60.0) * 3600000)).longValue();

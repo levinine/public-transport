@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -31,8 +33,8 @@ public class DataController {
         } else {
             String[] startCoordinates = refreshDto.getStart().split(",");
             String[] endCoordinates = refreshDto.getEnd().split(",");
-            String[] time = refreshDto.getDate().split(":");
-            return stationService.search(startCoordinates, endCoordinates, time);
+            LocalDateTime date = LocalDateTime.parse(refreshDto.getDate());
+            return stationService.search(startCoordinates, endCoordinates, date.getHour(), date.getMinute());
         }
     }
 
