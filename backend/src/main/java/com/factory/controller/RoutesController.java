@@ -28,7 +28,6 @@ public class RoutesController {
     public RoutesDto findRoutes(@RequestParam(RestApiRequestParams.START) String start,
                                 @RequestParam(RestApiRequestParams.END) String end,
                                 @RequestParam(RestApiRequestParams.DATE) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-
         String[] startCoordinates = start.split(",");
         String[] endCoordinates = end.split(",");
         return stationService.search(startCoordinates, endCoordinates, date.getHour(), date.getMinute());

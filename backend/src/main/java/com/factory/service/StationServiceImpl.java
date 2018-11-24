@@ -227,8 +227,8 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public RoutesDto search(String[] startCoords, String[] endCoords, int hours, int minutes) {
-        TransportProblem problem = new TransportProblem(startCoords[0], startCoords[1],
-                endCoords[0], endCoords[1], this);
+        TransportProblem problem = new TransportProblem(startCoords[1], startCoords[0],
+                endCoords[1], endCoords[0], this);
         TransportProblem.startTime = ((Double) ((hours + minutes / 60.0) * 3600000)).longValue();
         AStarSearch search = new AStarSearch(this);
 
