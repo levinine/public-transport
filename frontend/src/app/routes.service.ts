@@ -16,6 +16,10 @@ export class RoutesService {
       let headers = new Headers();
       headers.append('Content-Type', 'application/json');
       // @ts-ignore
+      let reverseStart;
+      let reverseEnd;
+
+      // @ts-ignore
       return this.http.get(`${API_URL}/routes?start=${start}&end=${end}&date=${date}`, headers);
   }
 

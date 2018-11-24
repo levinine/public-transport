@@ -81,8 +81,10 @@ export class MainComponent implements OnInit {
         console.log('You have already selected two markers');
       }
     });
+  }
 
-    this.getLines();
+  passCost() {
+    console.log()
   }
 
   changeTab(tabname: string): void {
