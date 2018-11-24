@@ -1,0 +1,63 @@
+<div class="row content">
+  <div class="col-12 col-md-3 sidebar-content">
+    <div class="main"> 
+      <div class="header">
+        <div>
+          <label class="title">Public transport</label>
+        </div>
+        <div>
+          <label>-Novi Sad-</label>
+        </div>
+      </div>
+      <div class="menu">
+        <ul class="nav">
+          <li class="nav-item">
+            <a [class.selected]="showDirections" class="nav-link" href="#" (click)="changeTab('directions')">Directions</a>
+          </li>
+          <li class="nav-item">
+            <a [class.selected]="showLines" class="nav-link" href="#" (click)="changeTab('lines')">Lines</a>
+          </li>
+        </ul>
+      </div>
+      <div id="directions" *ngIf="showDirections">
+        <form #directionsForm="ngForm">
+          <div class="form-group row search-item">
+            <label for="start" class="col-12 col-xl-2 col-form-label">Start</label>
+            <div class="col-12 col-xl-10">
+              <input type="text" id="start" readonly class="form-control" [(ngModel)]="model.startCoords" required name="start" #start="ngModel" placeholder="Choose starting point">
+            </div>
+          </div>
+          <div class="form-group row search-item">
+            <label for="end" class="col-12 col-xl-2 col-form-label">End</label>
+            <div class="col-12 col-xl-10">
+              <input type="text" id="end" readonly class="form-control" [(ngModel)]="model.endCoords" required name="end" #end="ngModel" placeholder="Choose destination">
+            </div>
+          </div>
+        </form>
+        <div class="row">
+          <div class="col-12 col-xl-6 button-holder">
+            <button (click)="getRoutes()" [disabled]="!directionsForm.form.valid" type="submit" class="search-button">Submit</button>
+          </div>
+          <div class="col-12 col-xl-6 button-holder">
+            <button (click)="clearMap()" class="search-button">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
+  </div>
+  <div class="col-12 col-md-9 map-content">
+    <div class="legend">
+      <div class="legend-title">
+        <span>Legend:</span>
+      </div>
+      <div class="legend-bus">
+        <span>Bus</span>
+      </div>
+      <div class="legend-walking">
+        <span>Walking</span>
+      </div>
+    </div>
+    <div id="map" class="map"></div>
+  </div>
+</div>

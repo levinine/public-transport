@@ -1,0 +1,120 @@
+@import '../../variables.scss';
+
+.content {
+	margin: 0;
+}
+.map {
+	height: 100vh;
+}
+.map-content {
+	padding-left: 0px;
+	padding-right: 0px;
+}
+.sidebar-content {
+	padding-left: 0px;
+	padding-right: 0px;
+	height: 100%;
+}
+.main {
+	background-color: $main-color;
+	color: white;
+	padding-top: 10px;
+}
+.title {
+	color: $secondary-color;
+	font-size: 20px;
+}
+.header {
+	background-color: $main-color;
+	text-align: left;
+	padding-left: 10px;
+}
+.menu {
+	background-color: inherit;
+	margin: 10px;
+}
+#directions {
+	margin: 10px 10px 0 10px;
+	padding: 10px;
+	font-size: 14px;
+	color: black;
+}
+#directions input {
+	border: none; 
+}
+#directions input::placeholder {
+	font-size: 14px;
+}
+#directions input:focus {
+	box-shadow: none; 
+}
+a {
+	color: white;
+}
+.search-item {
+	border: 1px solid gray;
+	border-radius: 5px;
+	background-color: white;
+}
+.search-item > div {
+	padding: 0;
+}
+.selected {
+	color: $secondary-color;
+	border-bottom: 2px solid $secondary-color;
+}
+.search-button {
+	height: 40px;
+	width: 135px;
+	border: 2px solid white;
+	border-radius: 10px;
+	background-color: $main-color;
+	color: white;
+	font-size: 16px;
+	outline: 0;
+}
+.button-holder {
+	text-align:center;
+	margin-bottom: 5px;
+}
+.search-button:disabled {
+	cursor: not-allowed;
+}
+.search-button:hover {
+	border: 2px solid  $main-color;
+	background-color: white;
+	color: $main-color;
+}
+.legend {
+	position: absolute;
+	right: 0;
+	top: 0;
+	background-color: white;
+	width: 150px;
+	padding: 5px;
+	z-index: 1;
+	border: 1px solid $main-color;
+	color: #666;
+}
+.legend-bus {
+	border-bottom: 2px solid $bus-color;
+	text-align: center;
+	margin: 5px;
+}
+.legend-walking {
+	border-bottom: 2px dashed $walking-color;
+	text-align: center;
+	margin: 5px;
+}
+.legend-title {
+	font-weight: bold;
+}
+
+@media(max-width: 767px) {
+	.map {
+		height: 70vh;
+	}
+	.legend {
+		display: none;
+	}
+}
