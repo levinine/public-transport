@@ -3,7 +3,7 @@ import { ROUTES } from '../app/mock-routes';
 import { Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-const API_URL = 'http://localhost:9090/api/v1/routes';
+const API_URL = 'http://localhost:9090/api/v1';
 
 @Injectable({
   providedIn: 'root'
