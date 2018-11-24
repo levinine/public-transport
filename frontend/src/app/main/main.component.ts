@@ -43,6 +43,20 @@ export class MainComponent implements OnInit {
   map: any;
   vectorSource = new VectorSource()
 
+  // TODO Delete this after finishing API
+  lines = [
+      {
+        name: '1A'
+      },
+      {
+        name: '7B'
+      },
+      {
+        name: '4A'
+      }
+      
+  ];
+
   constructor(private routesService: RoutesService) { }
 
   ngOnInit() {
@@ -86,6 +100,7 @@ export class MainComponent implements OnInit {
   }
 
   getRoutes() {
+    console.log(this.model.datePicker)
     this.routesService.getRoutes(this.model.startCoords,
         this.model.endCoords,
         this.model.datePicker).subscribe(response => {
