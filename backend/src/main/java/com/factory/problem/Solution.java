@@ -49,20 +49,6 @@ public class Solution {
                 .get(actions.size() - 1).getValue().getTimeElapsed() * 60));
     }
 
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("//////Solution//////");
-        actions.forEach(action -> {
-            stringBuilder.append(action.getKey().getDescription() + " time spent: " + action.getKey().timeCost() * 60);
-        });
-        stringBuilder.append(String.format("Time elapsed: %.4f minutes", actions
-                .get(actions.size() - 1).getValue().getTimeElapsed() * 60));
-
-        return stringBuilder.toString();
-    }
-
     public RouteDto toRouteDto() {
         RouteDto routeDto = new RouteDto();
         routeDto.setEstimatedTime(Precision.round(actions.get(actions.size() - 1).getValue().getTimeElapsed() * 60, 2));
