@@ -86,11 +86,12 @@ export class MainComponent implements OnInit {
   }
 
   getRoutes() {
-    // TODO: get routes from the real API
-    // this service returns mocked routes
-    this.routesService.getRoutes().subscribe(response => {
-      this.routes = response;
-      this.drawRoute(0);
+    this.routesService.getRoutes(this.model.startCoords,
+        this.model.endCoords,
+        this.model.datePicker).subscribe(response => {
+          console.log(response)
+      // this.routes = response;
+      // this.drawRoute(0);
     });
   }
 
