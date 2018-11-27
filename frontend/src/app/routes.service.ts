@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ROUTES } from '../app/mock-routes';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
-const API_URL = '/api/v1';
+const API_URL = 'http://localhost:8080/api/v1'; // izbrisi localhost kad pravis jar
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +22,10 @@ export class RoutesService {
       return this.http.get(`${API_URL}/routes?start=${start}&end=${end}&date=${date}`, headers);
   }
 
-  getLines() {
-      let headers = new Headers();
-      headers.append('Content-Type', 'application/json');
-      // @ts-ignore
-      return this.http.get(`${API_URL}/lines`, headers);
-  }
+  // getLines() {
+  //     let headers = new Headers();
+  //     headers.append('Content-Type', 'application/json');
+  //     // @ts-ignore
+  //     return this.http.get(`${API_URL}/lines`, headers);
+  // }
 }

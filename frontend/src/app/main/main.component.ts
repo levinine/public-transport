@@ -27,15 +27,17 @@ export class MainComponent implements OnInit {
   // Novi Sad coordinates
   latitude: number = 45.26060794;
   longitude: number = 19.83221305;
-  zoomSize: number = 16;
+  zoomSize: number = 14;
 
   routes = null;
 
   model = {
     'startCoords': null,
     'endCoords': null,
-    'datePicker': null
+    'dateTime': null
   };
+  datePickerStartAt = new Date();
+  datePickerMinValue = new Date();
 
   showDirections = true;
   showLines = false;
@@ -82,7 +84,7 @@ export class MainComponent implements OnInit {
       }
     });
 
-    this.getLines();
+    // this.getLines();
   }
 
   changeTab(tabname: string): void {
@@ -91,12 +93,9 @@ export class MainComponent implements OnInit {
   }
 
   getRoutes() {
-    this.routesService.getRoutes(this.model.startCoords,
-        this.model.endCoords,
-        this.model.datePicker).subscribe(
+    this.routesService.getRoutes(this.model.startCoords, this.model.endCoords, this.model.dateTime.toISOString()).subscribe(
           data => {
             this.routes = data.routes;
-            console.log(data);
           },
           error => { console.log(error) },
         () => {
@@ -105,16 +104,16 @@ export class MainComponent implements OnInit {
       );
   }
 
-  getLines() {
-    this.routesService.getLines().subscribe(
-        data => {
-          this.lines = data;
-        },
-        error => {
-            console.log(error)
-        }
-    )
-  }
+  // getLines() {
+  //   this.routesService.getLines().subscribe(
+  //       data => {
+  //         this.lines = data;
+  //       },
+  //       error => {
+  //           console.log(error)
+  //       }
+  //   )
+  // }
 
   drawMarker(coordinates) {
     // define style for the marker
@@ -217,20 +216,6 @@ export class MainComponent implements OnInit {
     // add bus station to the layer
     this.vectorSource.addFeature(busStation);
   }
-  
-  drawBusLine(lineName: String) {
-    for (let line of this.lines) {
-      if (line.name === lineName) {
-        console.log(line);
-          for (let i = 0; i < line.coordinates.length - 2; i++) {
-            console.log("entered");
-              let start = fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]);
-              let end = fromLonLat([line.coordinates[i + 1].lon, line.coordinates[i + 1].lat]);
-              this.drawLine(start, end, 2);
-          }
-      }
-    }
-  }
 
   onRouteSelection(routeIndex: number) {
     // replace the old route with the newly selected
@@ -244,6 +229,19 @@ export class MainComponent implements OnInit {
     });
     // draw new route
     this.drawRoute(routeIndex);
+  }
+
+  onBusLineSelection(line: any) {
+    this.clearMap(); // ili brisi redom iz vector source kao u onRouteSelection method
+    console.log('line', line);
+    for(let i=0; i<line.coordinates.length-1; i++) {
+      this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
+      this.drawBusStation(line.coordinates[i].lon, line.coordinates[i].lat, '');
+      if(i == line.coordinates.length-2) {
+        this.drawBusStation(line.coordinates[i+1].lon, line.coordinates[i+1].lat, '');
+      }
+    }
+
   }
 
   clearMap() {

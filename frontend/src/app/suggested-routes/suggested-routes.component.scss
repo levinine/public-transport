@@ -11,10 +11,11 @@ img {
 	padding: 10px 0;
 }
 .route {
-	padding: 20px 0 20px 10px;
+	padding: 40px 0 40px 10px;
 	border-bottom: 1px solid $border-color;
 	color: #404040;
 	margin: 0;
+	position: relative;
 }
 #routes > div:hover {
 	background-color:#eaeaea;
@@ -59,7 +60,9 @@ img {
 	font-size: 16px;
 	color: $main-color;
 }
-
-.total-cost {
-	padding: 5px;
+.cost {
+	position: absolute;
+	top: 2%;
+	right: 2%;
+	font-size: 16px;
 }
