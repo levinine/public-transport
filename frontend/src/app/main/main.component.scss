@@ -13,7 +13,8 @@
 .sidebar-content {
 	padding-left: 0px;
 	padding-right: 0px;
-	height: 100%;
+	height: 100vh;
+	overflow-y: scroll;
 }
 .main {
 	background-color: $main-color;
