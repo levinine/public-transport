@@ -1,14 +1,7 @@
-Run frontend:
+# Bus NS
 
-cd to frontend folder
-
-1. npm run install
-2. ng serve
-
-
-Run backend:
-
-cd to backend folder
-
-1. mvn clean install
-2. java -jar backend-0.0.1-SNAPSHOT
+## Build app
+* go to the parent folder
+* execute `mvn clean install`
+* generated jar file which contains spring boot and angular apps is located in `/backend/target` directory
+* Run `java -jar backend/target/public-transport-backend-0.0.1-SNAPSHOT.jar`
