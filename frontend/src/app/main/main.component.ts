@@ -16,6 +16,10 @@ import Stroke from 'ol/style/Stroke';
 import LineString from 'ol/geom/LineString';
 import Text from 'ol/style/Text';
 import Fill from 'ol/style/Fill';
+// import Geocoder from 'ol-geocoder';
+
+const START_COORDS = 'startCoords';
+const END_COORDS = 'endCoords';
 
 @Component({
   selector: 'app-main',
@@ -72,19 +76,18 @@ export class MainComponent implements OnInit {
     vm.map.on('click', function (args) {
       if (vm.model.startCoords == null || vm.model.endCoords == null) {
         // draw marker
-        vm.drawMarker(args.coordinate);
         var lonlat = transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
         if (vm.model.startCoords == null) {
+          vm.drawMarker(args.coordinate, START_COORDS);
           vm.model.startCoords = lonlat;
         } else if (vm.model.endCoords == null) {
+          vm.drawMarker(args.coordinate, END_COORDS);
           vm.model.endCoords = lonlat;
         }
       } else {
         console.log('You have already selected two markers');
       }
     });
-
-    // this.getLines();
   }
 
   changeTab(tabname: string): void {
@@ -104,18 +107,7 @@ export class MainComponent implements OnInit {
       );
   }
 
-  // getLines() {
-  //   this.routesService.getLines().subscribe(
-  //       data => {
-  //         this.lines = data;
-  //       },
-  //       error => {
-  //           console.log(error)
-  //       }
-  //   )
-  // }
-
-  drawMarker(coordinates) {
+  drawMarker(coordinates, direction) {
     // define style for the marker
     let markerStyle = new Style({
       image: new Icon({
@@ -131,7 +123,7 @@ export class MainComponent implements OnInit {
     // create marker feature and set style
     let marker = new Feature({
       geometry: new Point(coordinates),
-      name: 'Marker'
+      name: direction == START_COORDS ? 'MarkerStartCoords' : 'MarkerEndCoords'
     });
     marker.setStyle(markerStyle);
     // add marker to layer
@@ -233,7 +225,6 @@ export class MainComponent implements OnInit {
 
   onBusLineSelection(line: any) {
     this.clearMap(); // ili brisi redom iz vector source kao u onRouteSelection method
-    console.log('line', line);
     for(let i=0; i<line.coordinates.length-1; i++) {
       this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
       this.drawBusStation(line.coordinates[i].lon, line.coordinates[i].lat, '');
@@ -242,6 +233,27 @@ export class MainComponent implements OnInit {
       }
     }
 
+  }
+
+  setGeolocation() {
+    let vm = this;
+    for(let feature of vm.vectorSource.getFeatures()) {
+      let properties = feature.getProperties();
+      if (properties.name == 'MarkerStartCoords') {
+        vm.vectorSource.removeFeature(feature);
+        break;
+      }
+    };
+    navigator.geolocation.getCurrentPosition(result => {
+      const lon = result.coords.longitude;
+      const lat = result.coords.latitude;
+      vm.model.startCoords = [lon, lat];
+      vm.drawMarker(fromLonLat([lon, lat]), START_COORDS);
+    });
+  }
+
+  onKeyUp(evt: any) {
+    console.log('evt', evt);
   }
 
   clearMap() {

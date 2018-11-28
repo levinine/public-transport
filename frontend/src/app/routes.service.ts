@@ -21,11 +21,4 @@ export class RoutesService {
       // @ts-ignore
       return this.http.get(`${API_URL}/routes?start=${start}&end=${end}&date=${date}`, headers);
   }
-
-  // getLines() {
-  //     let headers = new Headers();
-  //     headers.append('Content-Type', 'application/json');
-  //     // @ts-ignore
-  //     return this.http.get(`${API_URL}/lines`, headers);
-  // }
 }
