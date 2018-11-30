@@ -16,7 +16,6 @@ import Stroke from 'ol/style/Stroke';
 import LineString from 'ol/geom/LineString';
 import Text from 'ol/style/Text';
 import Fill from 'ol/style/Fill';
-// import Geocoder from 'ol-geocoder';
 
 const START_COORDS = 'startCoords';
 const END_COORDS = 'endCoords';
@@ -224,7 +223,7 @@ export class MainComponent implements OnInit {
   }
 
   onBusLineSelection(line: any) {
-    this.clearMap(); // ili brisi redom iz vector source kao u onRouteSelection method
+    this.clearMap();
     for(let i=0; i<line.coordinates.length-1; i++) {
       this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
       this.drawBusStation(line.coordinates[i].lon, line.coordinates[i].lat, '');
@@ -251,11 +250,7 @@ export class MainComponent implements OnInit {
       vm.drawMarker(fromLonLat([lon, lat]), START_COORDS);
     });
   }
-
-  onKeyUp(evt: any) {
-    console.log('evt', evt);
-  }
-
+  
   clearMap() {
     // remove features from layer
     this.vectorSource.clear();
