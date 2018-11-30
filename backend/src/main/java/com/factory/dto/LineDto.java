@@ -13,6 +13,8 @@ import java.util.List;
 public class LineDto {
 
     private String name;
-
+    
+    private String description;
+    
     private List<CoordinateDto> coordinates = new ArrayList<>();
 }
