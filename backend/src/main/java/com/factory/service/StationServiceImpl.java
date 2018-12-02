@@ -288,8 +288,7 @@ public class StationServiceImpl implements StationService {
         });
 
         solutions.stream().forEach(solution -> routes.add(solution.toRouteDto()));
-        RoutesDto routesDto = new RoutesDto(routes);
-        return routesDto;
+        return new RoutesDto(routes);
     }
 
 
