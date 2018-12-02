@@ -9,6 +9,8 @@ import com.factory.model.*;
 import com.factory.problem.AStarSearch;
 import com.factory.problem.Solution;
 import com.factory.problem.TransportProblem;
+import com.factory.problem.action.MoveAction;
+import com.factory.problem.action.PublicTransportAction;
 import com.factory.problem.state.PassengerState;
 import com.factory.util.Pair;
 import com.factory.util.Util;
@@ -235,8 +237,59 @@ public class StationServiceImpl implements StationService {
         List<Solution> solutions = search.search(problem, 3);
         List<RouteDto> routes = new ArrayList<>();
 
+        // TODO: solution enrichment
+        solutions.forEach(solution -> {
+           solution.getActions().forEach(action -> {
+               MoveAction moveAction = action.getKey();
+
+               if (moveAction instanceof PublicTransportAction) {
+
+                   Line line = cityData.getLines().stream().filter(
+                           l -> l.getName().equals(action.getKey().getLineNumber())
+                   ).findFirst().get();
+
+
+                   Coordinate startCoordinate = new Coordinate(moveAction.getStartLat(), moveAction.getStartLon());
+                   Coordinate endCoordinate = new Coordinate(moveAction.getEndLat(), moveAction.getEndLon());
+
+                   // In case that coordinates of stations are included in the route data
+                   // int start = line.getCoordinates().indexOf(startCoordinate);
+                   // int end = line.getCoordinates().indexOf(endCoordinate);
+
+                   // Otherwise find the one with the shortest distance from the actual station
+                   final Comparator<Coordinate> compStart = Comparator.comparingDouble(c ->
+                           Util.distance(c.getLat(), c.getLon(), moveAction.getStartLat(), moveAction.getStartLon()));
+
+                   final Comparator<Coordinate> compEnd = Comparator.comparingDouble(c ->
+                           Util.distance(c.getLat(), c.getLon(), moveAction.getEndLat(), moveAction.getEndLon()));
+
+                   Coordinate nearestStartCoordinate = line.getCoordinates().stream()
+                           .min(compStart)
+                           .get();
+
+                   Coordinate nearestEndCoordinate = line.getCoordinates().stream()
+                           .min(compEnd)
+                           .get();
+
+                   int start = line.getCoordinates().indexOf(nearestStartCoordinate);
+                   int end = line.getCoordinates().indexOf(nearestEndCoordinate);
+
+                   if ((start != -1 && end != -1)) {
+                       // Because coordinates of stations are not included in line coordinates
+                       action.getKey().setMoveActionPath(new ArrayList<Coordinate>(){{add(startCoordinate);}});
+                       action.getKey().getMoveActionPath().addAll(line.getCoordinates().subList(start, end));
+                       action.getKey().getMoveActionPath().add(endCoordinate);
+                   } else {
+                       action.getKey().setMoveActionPath(Arrays.asList(startCoordinate, endCoordinate));
+                   }
+               }
+
+           });
+        });
+
         solutions.stream().forEach(solution -> routes.add(solution.toRouteDto()));
-        return new RoutesDto(routes);
+        RoutesDto routesDto = new RoutesDto(routes);
+        return routesDto;
     }
 
 
