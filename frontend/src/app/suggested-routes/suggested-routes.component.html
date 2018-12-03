@@ -11,9 +11,6 @@
           <span>{{route.estimatedTime}}</span>
           <span>min</span>
       </div>
-      <div class="total-cost">
-        {{ routes[0].totalCost }} din
-      </div>
       <div class="col-10 activities">
         <div *ngFor="let activity of route.activities; index as ri" class="activity">
           <div *ngIf="activity.type==1" class="walking-route">
@@ -26,6 +23,9 @@
           </div>
           <label *ngIf="ri<route.activities.length-1" class="arrow">></label>
         </div>
+      </div>
+      <div class="cost">
+        <span>Total cost: {{route.totalCost}}</span>
       </div>
     </div>
   </div>

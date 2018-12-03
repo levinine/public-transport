@@ -256,6 +256,7 @@ public class StationServiceImpl implements StationService {
         return cityData.getLines().stream().map(line -> {
             LineDto lineDto = new LineDto();
             lineDto.setName(line.getName());
+            lineDto.setDescription(line.getDescription());
             line.getCoordinates().stream().forEach(coordinate -> lineDto.getCoordinates().add(new CoordinateDto(Double.parseDouble(coordinate.getLat()), Double.parseDouble(coordinate.getLon()))));
             return lineDto;
         }).collect(Collectors.toList());

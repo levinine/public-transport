@@ -26,6 +26,9 @@
             <div class="col-12 col-xl-10">
               <input type="text" id="start" class="form-control" [(ngModel)]="model.startCoords" required name="start" #start="ngModel" placeholder="Choose starting point">
             </div>
+            <div class="direction-icon" (click)="setGeolocation()">
+              <img src="../../assets/images/geolocation.svg">
+            </div>
           </div>
           <div class="form-group row search-item">
             <label for="end" class="col-12 col-xl-2 col-form-label">End</label>
@@ -34,7 +37,11 @@
             </div>
           </div>
           <div class="form-group row search-item">
-            <input type="datetime-local" id="datepicker" class="form-control" [(ngModel)]="model.datePicker" required name="datePicker" #datePicker="ngModel">
+            <label for="dateTime" class="col-12 col-xl-2 col-form-label">Time</label>
+            <div class="col-12 col-xl-10">
+              <input id="dateTime" readonly required class="form-control" [min]="datePickerMinValue" [(ngModel)]="model.dateTime" name="dateTime" #dateTime="ngModel" placeholder="Select date and time" [owlDateTimeTrigger]="dt" [owlDateTime]="dt">
+              <owl-date-time #dt [startAt]="datePickerStartAt"></owl-date-time>
+            </div>
           </div>
         </form>
         <div class="row">
@@ -47,17 +54,8 @@
         </div>
       </div>
     </div>
-    <div>
-      <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
-    </div>
-    <div *ngIf="showLines">
-      <div class="col-12 col-xl-12 button-holder">
-        <button (click)="clearMap()" class="search-button">Clear</button>
-      </div>
-      <div class="line" *ngFor="let line of lines" (click)="drawBusLine(line.name)">
-        {{ line.name }}
-      </div>
-    </div>
+    <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
+    <app-lines *ngIf="showLines" (selectLine)="onBusLineSelection($event)"></app-lines>
   </div>
   <div class="col-12 col-md-9 map-content">
     <div class="legend">
