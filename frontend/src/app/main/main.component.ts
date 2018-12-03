@@ -17,6 +17,9 @@ import LineString from 'ol/geom/LineString';
 import Text from 'ol/style/Text';
 import Fill from 'ol/style/Fill';
 
+const START_COORDS = 'startCoords';
+const END_COORDS = 'endCoords';
+
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
@@ -27,15 +30,17 @@ export class MainComponent implements OnInit {
   // Novi Sad coordinates
   latitude: number = 45.26060794;
   longitude: number = 19.83221305;
-  zoomSize: number = 16;
+  zoomSize: number = 14;
 
   routes = null;
 
   model = {
     'startCoords': null,
     'endCoords': null,
-    'datePicker': null
+    'dateTime': null
   };
+  datePickerStartAt = new Date();
+  datePickerMinValue = new Date();
 
   showDirections = true;
   showLines = false;
@@ -70,19 +75,18 @@ export class MainComponent implements OnInit {
     vm.map.on('click', function (args) {
       if (vm.model.startCoords == null || vm.model.endCoords == null) {
         // draw marker
-        vm.drawMarker(args.coordinate);
         var lonlat = transform(args.coordinate, 'EPSG:3857', 'EPSG:4326');
         if (vm.model.startCoords == null) {
+          vm.drawMarker(args.coordinate, START_COORDS);
           vm.model.startCoords = lonlat;
         } else if (vm.model.endCoords == null) {
+          vm.drawMarker(args.coordinate, END_COORDS);
           vm.model.endCoords = lonlat;
         }
       } else {
         console.log('You have already selected two markers');
       }
     });
-
-    this.getLines();
   }
 
   changeTab(tabname: string): void {
@@ -91,12 +95,9 @@ export class MainComponent implements OnInit {
   }
 
   getRoutes() {
-    this.routesService.getRoutes(this.model.startCoords,
-        this.model.endCoords,
-        this.model.datePicker).subscribe(
+    this.routesService.getRoutes(this.model.startCoords, this.model.endCoords, this.model.dateTime.toISOString()).subscribe(
           data => {
             this.routes = data.routes;
-            console.log(data);
           },
           error => { console.log(error) },
         () => {
@@ -105,18 +106,7 @@ export class MainComponent implements OnInit {
       );
   }
 
-  getLines() {
-    this.routesService.getLines().subscribe(
-        data => {
-          this.lines = data;
-        },
-        error => {
-            console.log(error)
-        }
-    )
-  }
-
-  drawMarker(coordinates) {
+  drawMarker(coordinates, direction) {
     // define style for the marker
     let markerStyle = new Style({
       image: new Icon({
@@ -132,7 +122,7 @@ export class MainComponent implements OnInit {
     // create marker feature and set style
     let marker = new Feature({
       geometry: new Point(coordinates),
-      name: 'Marker'
+      name: direction == START_COORDS ? 'MarkerStartCoords' : 'MarkerEndCoords'
     });
     marker.setStyle(markerStyle);
     // add marker to layer
@@ -217,20 +207,6 @@ export class MainComponent implements OnInit {
     // add bus station to the layer
     this.vectorSource.addFeature(busStation);
   }
-  
-  drawBusLine(lineName: String) {
-    for (let line of this.lines) {
-      if (line.name === lineName) {
-        console.log(line);
-          for (let i = 0; i < line.coordinates.length - 2; i++) {
-            console.log("entered");
-              let start = fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]);
-              let end = fromLonLat([line.coordinates[i + 1].lon, line.coordinates[i + 1].lat]);
-              this.drawLine(start, end, 2);
-          }
-      }
-    }
-  }
 
   onRouteSelection(routeIndex: number) {
     // replace the old route with the newly selected
@@ -246,6 +222,35 @@ export class MainComponent implements OnInit {
     this.drawRoute(routeIndex);
   }
 
+  onBusLineSelection(line: any) {
+    this.clearMap();
+    for(let i=0; i<line.coordinates.length-1; i++) {
+      this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
+      this.drawBusStation(line.coordinates[i].lon, line.coordinates[i].lat, '');
+      if(i == line.coordinates.length-2) {
+        this.drawBusStation(line.coordinates[i+1].lon, line.coordinates[i+1].lat, '');
+      }
+    }
+
+  }
+
+  setGeolocation() {
+    let vm = this;
+    for(let feature of vm.vectorSource.getFeatures()) {
+      let properties = feature.getProperties();
+      if (properties.name == 'MarkerStartCoords') {
+        vm.vectorSource.removeFeature(feature);
+        break;
+      }
+    };
+    navigator.geolocation.getCurrentPosition(result => {
+      const lon = result.coords.longitude;
+      const lat = result.coords.latitude;
+      vm.model.startCoords = [lon, lat];
+      vm.drawMarker(fromLonLat([lon, lat]), START_COORDS);
+    });
+  }
+  
   clearMap() {
     // remove features from layer
     this.vectorSource.clear();
