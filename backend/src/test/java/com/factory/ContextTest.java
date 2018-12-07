@@ -9,8 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(classes = BackendApplication.class)
 public class ContextTest {
 
-	@Test
-	public void testApplictionContextStarts() {
-		System.out.println("Application context started");
-	}
+    @Test
+    public void testApplictionContextStarts() {
+        System.out.println("Application context started");
+    }
 }

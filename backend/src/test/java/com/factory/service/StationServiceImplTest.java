@@ -1,4 +1,4 @@
-package service;
+package com.factory.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -19,22 +19,22 @@ import com.factory.service.StationServiceImpl;
 @SpringBootTest(classes = BackendApplication.class)
 public class StationServiceImplTest {
 
-	@Autowired
-	private StationServiceImpl stationService;
+    @Autowired
+    private StationServiceImpl stationService;
 
-	@Test
-	public void testInitData() {
-		try {
-			stationService.initData();
-		} catch (Exception e) {
-			fail("initData threw exception");
-		}
-	}
+    @Test
+    public void testInitData() {
+        try {
+            stationService.initData();
+        } catch (Exception e) {
+            fail("initData threw exception");
+        }
+    }
 
-	@Test
-	public void testFindAllLines() {
-		List<LineDto> lines = stationService.findAllLines();
-		assertEquals(53, lines.size());
-	}
+    @Test
+    public void testFindAllLines() {
+        List<LineDto> lines = stationService.findAllLines();
+        assertEquals(53, lines.size());
+    }
 
 }
