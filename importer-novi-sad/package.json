@@ -1,0 +1,16 @@
+{
+  "name": "bus-data",
+  "version": "1.0.0",
+  "description": "Data import of bus data",
+  "main": "handler.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "m.jovanovic@levi9.com",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "osmosis": "^1.1.8",
+    "underscore": "^1.9.1"
+  }
+}

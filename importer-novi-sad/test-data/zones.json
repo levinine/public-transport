@@ -1,0 +1,20 @@
+{
+    "zones": [
+        {
+            "name": "I",
+            "price": "65"
+        },
+        {
+            "name": "II",
+            "price": "110"
+        },
+        {
+            "name": "III",
+            "price": "136"
+        },
+        {
+            "name": "IV",
+            "price": "175"
+        }
+    ]
+}
