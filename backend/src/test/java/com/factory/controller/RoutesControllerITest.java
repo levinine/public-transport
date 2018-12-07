@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {BackendApplication.class}, loader = SpringBootContextLoader.class)
-@TestPropertySource(properties = {"factory.zones=https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/zones"})
+@TestPropertySource(properties = {"factory.lines=https://s3-eu-west-1.amazonaws.com/zadatak.5dananajavi.com/lines"})
 public class RoutesControllerITest {
 
     @Autowired
@@ -45,7 +45,7 @@ public class RoutesControllerITest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
-    private JSONArray getRoutes(String start, String end) throws Exception {
+    public JSONArray getRoutes(String start, String end) throws Exception {
         MvcResult result = mockMvc.perform(get(RestApiEndpoints.ROUTES)
                 .param(RestApiRequestParams.START, start)
                 .param(RestApiRequestParams.END, end)
@@ -85,5 +85,6 @@ public class RoutesControllerITest {
     public void should_return_three_possible_routes() throws Exception {
         Assert.assertEquals(3, getRoutes("19.7906489942927,45.2486308914001", "19.8441568,45.2654541").length());
     }
+
 
 }
