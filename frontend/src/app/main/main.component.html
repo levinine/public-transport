@@ -1,6 +1,6 @@
 <div class="row content">
   <div class="col-12 col-md-3 sidebar-content">
-    <div class="main"> 
+    <div class="main">
       <div class="header">
         <div>
           <label class="title">Public transport</label>
@@ -22,37 +22,52 @@
       <div id="directions" *ngIf="showDirections">
         <form #directionsForm="ngForm">
           <div class="form-group row search-item">
-            <label for="start" class="col-12 col-xl-2 col-form-label">Start</label>
-            <div class="col-12 col-xl-10">
-              <input type="text" id="start" class="form-control" [(ngModel)]="model.startCoords" required name="start" #start="ngModel" placeholder="Choose starting point">
+              <label for="start" class="col-12 col-xl-2 col-form-label">Start</label>
+              <div class="col-12 col-xl-10">
+                <input type="text" id="start" (keyup)="onDestinationKeyUp($event, model.startDestination, 'startDestinationAddresses')" [(ngModel)]="model.startDestination.info" #startDestination.info="ngModel" class="form-control destination-input" name="start" required placeholder="Choose starting point">
+                <div class="input-field-icons" >
+                  <img src="../../assets/images/geolocation.svg" (click)="setGeolocation()">
+                  <img src="../../assets/images/remove.svg" (click)="clearPoint(model.startDestination, 'startDestination')">
+                </div>
+                <div *ngIf="startDestinationAddresses.length > 0">
+                  <div class="searched-destination" *ngFor="let address of startDestinationAddresses" (click)="setDestinationModel(address, model.startDestination, 'startDestinationAddresses')">
+                    {{address.display_name}}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="direction-icon" (click)="setGeolocation()">
-              <img src="../../assets/images/geolocation.svg">
+            <div class="form-group row search-item">
+              <label for="end" class="col-12 col-xl-2 col-form-label">End</label>
+              <div class="col-12 col-xl-10">
+                <input type="text" id="end" (keyup)="onDestinationKeyUp($event, model.endDestination, 'endDestinationAddresses')" [(ngModel)]="model.endDestination.info" #endDestination.info="ngModel" class="form-control destination-input" name="end" required placeholder="Choose destination">
+                <div class="input-field-icons" (click)="clearPoint(model.endDestination, 'endDestination')">
+                  <img src="../../assets/images/remove.svg">
+                </div>
+                <div *ngIf="endDestinationAddresses.length > 0">
+                  <div class="searched-destination" *ngFor="let address of endDestinationAddresses" (click)="setDestinationModel(address, model.endDestination, 'endDestinationAddresses')">
+                      {{address.display_name}}
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="form-group row search-item">
-            <label for="end" class="col-12 col-xl-2 col-form-label">End</label>
-            <div class="col-12 col-xl-10">
-              <input type="text" id="end" class="form-control" [(ngModel)]="model.endCoords" required name="end" #end="ngModel" placeholder="Choose destination">
-            </div>
-          </div>
           <div class="form-group row search-item">
             <label for="dateTime" class="col-12 col-xl-2 col-form-label">Time</label>
             <div class="col-12 col-xl-10">
-              <input id="dateTime" readonly required class="form-control" [min]="datePickerMinValue" [(ngModel)]="model.dateTime" name="dateTime" #dateTime="ngModel" placeholder="Select date and time" [owlDateTimeTrigger]="dt" [owlDateTime]="dt">
-              <owl-date-time #dt [startAt]="datePickerStartAt"></owl-date-time>
+              <input id="dateTime" readonly required class="form-control" [min]="datePickerMinValue" [(ngModel)]="model.dateTime" name="dateTime" #dateTime="ngModel" placeholder="Choose date and time" [owlDateTimeTrigger]="dt" [owlDateTime]="dt">
+              <owl-date-time #dt [backdropClass]="aass" [startAt]="datePickerStartAt"></owl-date-time>
             </div>
           </div>
         </form>
         <div class="row">
           <div class="col-12 col-xl-6 button-holder">
-            <button (click)="getRoutes()" [disabled]="!directionsForm.form.valid" type="submit" class="search-button">Submit</button>
+            <button (click)="getRoutes()" [disabled]="!directionsForm.form.valid" type="submit" class="action-button">Submit</button>
           </div>
           <div class="col-12 col-xl-6 button-holder">
-            <button (click)="clearMap()" class="search-button">Clear</button>
+            <button (click)="clearAllContent()" [disabled]="model.startDestination.info==null" class="action-button">Clear</button>
           </div>
         </div>
       </div>
+      <hr>
     </div>
     <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
     <app-lines *ngIf="showLines" (selectLine)="onBusLineSelection($event)"></app-lines>

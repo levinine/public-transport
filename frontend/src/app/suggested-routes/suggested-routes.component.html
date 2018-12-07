@@ -8,14 +8,14 @@
   <div *ngFor="let route of routes; index as i" (click) = "changeRoute(i)">
     <div class="row route" [class.selected]="selectedIndex==i">
       <div class="col-2 estimated-time">
-          <span>{{route.estimatedTime}}</span>
+          <span>{{route.estimatedTime | number:'1.0-0'}}</span>
           <span>min</span>
       </div>
       <div class="col-10 activities">
         <div *ngFor="let activity of route.activities; index as ri" class="activity">
           <div *ngIf="activity.type==1" class="walking-route">
             <img src="../../assets/images/walking.svg">
-            <label>{{activity.estimatedTime}}m</label>
+            <label>{{activity.estimatedTime | number:'1.0-0'}}m</label>
           </div>
           <div *ngIf="activity.type==2" class="bus-route">
             <img src="../../assets/images/bus.svg">
