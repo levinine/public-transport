@@ -2,5 +2,70 @@
 @import "~ng-pick-datetime/assets/style/picker.min.css";
 
 body {
-  background-color: #F8F8F8;
+  background-color: white;
+}
+
+//mobile portrait
+@media (max-width: 567px) {
+  .cdk-overlay-pane {
+    max-width: 70% !important;
+    transform: none !important;
+    top: 15% !important;
+    left: 15% !important;
+  }
+  .owl-dt-inline-container .owl-dt-calendar, .owl-dt-popup-container .owl-dt-calendar {
+    height: 18.5em !important;
+  }
+}
+
+// mobile landscape
+@media (max-height: 420px) {
+  .cdk-overlay-pane {
+    max-width: 50% !important;
+    max-height: 100vh !important;
+    transform: none !important;
+    top: 10% !important;
+    left: 15% !important;
+    border: 1px solid rgba(0,0,0,.12) !important;
+  }
+  .owl-dt-popup-container .owl-dt-calendar {
+    height: 85vh !important;
+  }
+  .owl-dt-popup-container {
+    height: 85vh !important;
+  }
+  .owl-dt-popup-container {
+    box-shadow: none !important;
+  }
+  .cdk-global-overlay-wrapper, .cdk-overlay-container {
+    width: 80% !important;
+  }
+  .owl-dt-timer {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    background-color: white;
+    height: 75%;
+    border: 1px solid rgba(0,0,0,.12);
+  }
+  .owl-dt-container-buttons {
+    position: absolute;
+    left: 100%;
+    top: 75%;
+    background-color: white;
+    height: 25%;
+  }
+  .owl-dt-container-buttons .owl-dt-control-content {
+    border-left: 1px solid rgba(0,0,0,.12);
+    border-right: 1px solid rgba(0,0,0,.12);
+    border-bottom: 1px solid rgba(0,0,0,.12);
+  }
+  .owl-dt-timer-divider {
+    height: 35%;
+    top: 33%;
+  }
+  .owl-dt-timer-box {
+    height: 60%;
+    top: 25%;
+  }
 }

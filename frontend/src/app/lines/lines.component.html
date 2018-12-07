@@ -1,3 +1,6 @@
-<div class="line" *ngFor="let line of lines" (click)="changeLine(line)">
+<div class="title">
+  <label>City lines</label>
+</div>
+<div class="line" *ngFor="let line of lines;  index as i" [class.selected]="selectedIndex==i" (click)="changeLine(line, i)">
   {{ line.name }} - {{ line.description }}
 </div>
