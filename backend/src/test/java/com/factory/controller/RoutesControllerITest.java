@@ -4,9 +4,9 @@ import com.factory.BackendApplication;
 import com.factory.common.api.RestApiConstants;
 import com.factory.common.api.RestApiEndpoints;
 import com.factory.common.api.RestApiRequestParams;
-import com.jayway.jsonpath.JsonPath;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDateTime;
@@ -28,9 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebAppConfiguration
@@ -50,7 +46,7 @@ public class RoutesControllerITest {
     }
 
     private JSONArray getRoutes(String start, String end) throws Exception {
-        MvcResult result =  mockMvc.perform(get(RestApiEndpoints.ROUTES)
+        MvcResult result = mockMvc.perform(get(RestApiEndpoints.ROUTES)
                 .param(RestApiRequestParams.START, start)
                 .param(RestApiRequestParams.END, end)
                 .param(RestApiRequestParams.DATE, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
@@ -66,7 +62,8 @@ public class RoutesControllerITest {
         for (int i = 0; i < 3; i++) {
             JSONArray activities = routes.getJSONObject(i).getJSONArray(RestApiConstants.ACTIVITIES);
             for (int j = 0; j < activities.length(); j++) {
-                assert Integer.valueOf(activities.getJSONObject(j).getString(RestApiConstants.TYPE)) == 1;
+                int typeValue = Integer.valueOf(activities.getJSONObject(j).getString(RestApiConstants.TYPE));
+                Assert.assertEquals(1, typeValue);
             }
         }
     }
@@ -80,13 +77,13 @@ public class RoutesControllerITest {
             for (int j = 0; j < activities.length(); j++) {
                 typesList.add(activities.getJSONObject(j).getString(RestApiConstants.TYPE));
             }
-            assert typesList.contains("2");
+            Assert.assertTrue(typesList.contains("2"));
         }
     }
 
     @Test
     public void should_return_three_possible_routes() throws Exception {
-        assert getRoutes("19.7906489942927,45.2486308914001", "19.8441568,45.2654541").length() == 3;
+        Assert.assertEquals(3, getRoutes("19.7906489942927,45.2486308914001", "19.8441568,45.2654541").length());
     }
 
 }
