@@ -12,3 +12,14 @@
     font-size: 14px;
     cursor: pointer;
 }
+.selected {
+    background-color: $main-color;
+    color: $secondary-color;
+}
+.title {
+    text-align: center;
+	font-size: 24px;
+	color: #8C8C8C;
+    padding: 10px 0;
+    font-weight: bold;
+}

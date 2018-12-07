@@ -11,6 +11,7 @@ export class LinesComponent implements OnInit {
   @Output() selectLine = new EventEmitter<number>();
 
   lines: any;
+  selectedIndex: number;
 
   constructor(private linesService: LinesService) { }
   
@@ -27,7 +28,8 @@ export class LinesComponent implements OnInit {
     });
   }
 
-  changeLine(line) {
+  changeLine(line: any, index: number) {
+    this.selectedIndex = index;
     this.selectLine.emit(line);
   }
 }
