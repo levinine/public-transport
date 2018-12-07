@@ -17,6 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import static org.hamcrest.Matchers.*;
 
 import com.factory.BackendApplication;
 import com.factory.common.api.RestApiEndpoints;
@@ -38,9 +39,10 @@ public class LinesControllerITest {
     }
 
     @Test
-    public void should_fail_on_readonly_and_dont_allow_remove_flags() throws Exception {
+    public void should_return_all_lines() throws Exception {
         mockMvc.perform(get(RestApiEndpoints.LINES).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.*", hasSize(53)))
                 .andExpect(jsonPath("$[0].name", is("1A")));
     }
 
