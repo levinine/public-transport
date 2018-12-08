@@ -17,4 +17,6 @@ public class LineDto {
     private String description;
     
     private List<CoordinateDto> coordinates = new ArrayList<>();
+    
+    private List<CoordinateDto> stops = new ArrayList<>();
 }
