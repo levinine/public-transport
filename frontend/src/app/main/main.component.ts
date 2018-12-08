@@ -176,6 +176,7 @@ export class MainComponent implements OnInit {
     this.clearRoutes();
     this.clearModel(this.model.startDestination);
     this.clearModel(this.model.endDestination);
+    this.model.dateTime = new Date();
   }
 
   clearMarker(markerName: string) {
@@ -248,11 +249,19 @@ export class MainComponent implements OnInit {
       let startPoint = fromLonLat([activity.startCoord.lon, activity.startCoord.lat]);
       let endPoint = fromLonLat([activity.endCoord.lon, activity.endCoord.lat]);
       // draw activity line
-      this.drawLine(startPoint, endPoint, activity.type);
+      if((activity.type == 1 && !activity.pathCoordinates) || (activity.type == 2 && !activity.pathCoordinates)) {
+        this.drawLine(startPoint, endPoint, activity.type);
+      }
       if (activity.type == 2) {
         // draw bus station for start and end point for each bus activities
         this.drawBusStation(activity.startCoord.lon, activity.startCoord.lat, activity.startingStation);
         this.drawBusStation(activity.endCoord.lon, activity.endCoord.lat, activity.endingStation);
+        // draw bus path if exists
+        if(activity.pathCoordinates) {
+          for(let i=0; i<activity.pathCoordinates.length-1; i++) {
+            this.drawLine(fromLonLat([activity.pathCoordinates[i].lon, activity.pathCoordinates[i].lat]), fromLonLat([activity.pathCoordinates[i+1].lon, activity.pathCoordinates[i+1].lat]), activity.type);
+          }
+        }
       }
     }
   }
@@ -341,12 +350,11 @@ export class MainComponent implements OnInit {
     for(let i=0; i<line.coordinates.length-1; i++) {
       this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
     }
-    // uncomment when API returns stops
-    
-    // for(let i=0; i<line.stops.length; i++) {
-    //   this.drawBusStation(line.stops[i].lon, line.stops[i].lat, '');
-    // }
+    if(line.stops) {
+      for(let i=0; i<line.stops.length; i++) {
+        this.drawBusStation(line.stops[i].lon, line.stops[i].lat, '');
+      }
+    }
   }
-
 
 }

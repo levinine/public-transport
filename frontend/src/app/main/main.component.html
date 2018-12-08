@@ -54,7 +54,7 @@
             <label for="dateTime" class="col-12 col-xl-2 col-form-label">Time</label>
             <div class="col-12 col-xl-10">
               <input id="dateTime" readonly required class="form-control" [min]="datePickerMinValue" [(ngModel)]="model.dateTime" name="dateTime" #dateTime="ngModel" placeholder="Choose date and time" [owlDateTimeTrigger]="dt" [owlDateTime]="dt">
-              <owl-date-time #dt [backdropClass]="aass" [startAt]="datePickerStartAt"></owl-date-time>
+              <owl-date-time #dt [startAt]="datePickerStartAt"></owl-date-time>
             </div>
           </div>
         </form>
