@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RoutesService } from '../routes.service';
 import { SearchService } from '../search.service';
+import {TranslateService} from '@ngx-translate/core';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -60,7 +61,7 @@ export class MainComponent implements OnInit {
   map: any;
   vectorSource = new VectorSource()
 
-  constructor(private routesService: RoutesService, private searchService: SearchService) { }
+  constructor(private routesService: RoutesService, private searchService: SearchService, private translate: TranslateService) { }
 
   ngOnInit() {
     let vm = this
@@ -353,4 +354,7 @@ export class MainComponent implements OnInit {
     }
   }
 
+  useLanguage(language: string) {
+    this.translate.use(language);
+  }
 }
