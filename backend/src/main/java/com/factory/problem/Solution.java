@@ -101,6 +101,7 @@ public class Solution {
         activityDto.setPathCoordinates(startingStation.getMoveActionPath().stream().map(coordinate ->
                 new CoordinateDto(Double.valueOf(coordinate.getLat()), Double.valueOf(coordinate.getLon())))
                 .collect(Collectors.toList()));
+        activityDto.getPathCoordinates().add(new CoordinateDto(Double.parseDouble(endingStation.getEndLat()), Double.parseDouble(endingStation.getEndLon())));
         return activityDto;
     }
 
