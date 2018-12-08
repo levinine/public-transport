@@ -120,6 +120,7 @@ export class MainComponent implements OnInit {
     this.routesService.getRoutes(this.model).subscribe(
       data => {
         this.routes = data.routes;
+        this.clearLinesAndStations();
         this.drawRoute(0);
       },
       error => {
@@ -335,12 +336,7 @@ export class MainComponent implements OnInit {
     // replace the old route with the newly selected
     let vm = this;
     // remove lines and bus stations from the old one
-    vm.vectorSource.getFeatures().forEach(function (feature) {
-      let properties = feature.getProperties();
-      if (properties.name == 'Line' || properties.name == 'Station') {
-        vm.vectorSource.removeFeature(feature);
-      }
-    });
+    vm.clearLinesAndStations();
     // draw new route
     this.drawRoute(routeIndex);
   }
