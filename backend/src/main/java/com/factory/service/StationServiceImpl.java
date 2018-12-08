@@ -9,6 +9,8 @@ import com.factory.model.*;
 import com.factory.problem.AStarSearch;
 import com.factory.problem.Solution;
 import com.factory.problem.TransportProblem;
+import com.factory.problem.action.MoveAction;
+import com.factory.problem.action.PublicTransportAction;
 import com.factory.problem.state.PassengerState;
 import com.factory.util.Pair;
 import com.factory.util.Util;
@@ -177,25 +179,28 @@ public class StationServiceImpl implements StationService {
         return result;
     }
 
+    private static final long DAY = 24 * 3600 * 1000;
     @Override
     public double getWaitTime(long currentTime, Line line, Stop station) {
+    	final Long offset = lineToStationTime.get(line.getName()).get(station.getName());
         for (String timetableTime : line.getTimeTable()) {
             Double timetableTimeInMillis = getTimetableTimeInMillis(timetableTime);
-
-            if (currentTime < lineToStationTime.get(line.getName()).get(station.getName()) + timetableTimeInMillis.longValue()) {
-                return (lineToStationTime.get(line.getName()).get(station.getName())
-                        + timetableTimeInMillis.longValue()
-                        - currentTime) / 3600000.00;
+			if (currentTime < offset + timetableTimeInMillis.longValue()) {
+                return (offset + timetableTimeInMillis.longValue() - currentTime) / 3_600_000.00;
             }
         }
-        return 0;
+        
+        String timetableTime = line.getTimeTable().get(0);
+        long timetableTimeInMillis = getTimetableTimeInMillis(timetableTime).longValue();
+        final double wrapped = (offset + timetableTimeInMillis - currentTime + DAY) / 3_600_000.00;
+		return wrapped;
     }
 
-    private Double getTimetableTimeInMillis(String timetableTime) {
+    private static Double getTimetableTimeInMillis(String timetableTime) {
         String[] timeParts = timetableTime.split(":");
         int hour = Integer.valueOf(timeParts[0]);
         int minutes = Integer.valueOf(timeParts[1]);
-        return (hour + minutes / 60.0) * 3600000;
+        return (60 * hour + minutes) * 60_000D;
     }
 
     @Override
@@ -234,6 +239,56 @@ public class StationServiceImpl implements StationService {
 
         List<Solution> solutions = search.search(problem, 3);
         List<RouteDto> routes = new ArrayList<>();
+
+        // TODO: solution enrichment
+        solutions.forEach(solution -> {
+           solution.getActions().forEach(action -> {
+               MoveAction moveAction = action.getKey();
+
+               if (moveAction instanceof PublicTransportAction) {
+
+                   Line line = cityData.getLines().stream().filter(
+                           l -> l.getName().equals(action.getKey().getLineNumber())
+                   ).findFirst().get();
+
+
+                   Coordinate startCoordinate = new Coordinate(moveAction.getStartLat(), moveAction.getStartLon());
+                   Coordinate endCoordinate = new Coordinate(moveAction.getEndLat(), moveAction.getEndLon());
+
+                   // In case that coordinates of stations are included in the route data
+                   // int start = line.getCoordinates().indexOf(startCoordinate);
+                   // int end = line.getCoordinates().indexOf(endCoordinate);
+
+                   // Otherwise find the one with the shortest distance from the actual station
+                   final Comparator<Coordinate> compStart = Comparator.comparingDouble(c ->
+                           Util.distance(c.getLat(), c.getLon(), moveAction.getStartLat(), moveAction.getStartLon()));
+
+                   final Comparator<Coordinate> compEnd = Comparator.comparingDouble(c ->
+                           Util.distance(c.getLat(), c.getLon(), moveAction.getEndLat(), moveAction.getEndLon()));
+
+                   Coordinate nearestStartCoordinate = line.getCoordinates().stream()
+                           .min(compStart)
+                           .get();
+
+                   Coordinate nearestEndCoordinate = line.getCoordinates().stream()
+                           .min(compEnd)
+                           .get();
+
+                   int start = line.getCoordinates().indexOf(nearestStartCoordinate);
+                   int end = line.getCoordinates().indexOf(nearestEndCoordinate);
+
+                   if ((start != -1 && end != -1)) {
+                       // Because coordinates of stations are not included in line coordinates
+                       action.getKey().setMoveActionPath(new ArrayList<Coordinate>(){{add(startCoordinate);}});
+                       action.getKey().getMoveActionPath().addAll(line.getCoordinates().subList(start, end));
+                       action.getKey().getMoveActionPath().add(endCoordinate);
+                   } else {
+                       action.getKey().setMoveActionPath(Arrays.asList(startCoordinate, endCoordinate));
+                   }
+               }
+
+           });
+        });
 
         solutions.stream().forEach(solution -> routes.add(solution.toRouteDto()));
         return new RoutesDto(routes);

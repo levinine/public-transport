@@ -54,7 +54,7 @@ public class AStarSearch {
                 continue;
             }
 
-            for (Pair<MoveAction, PassengerState> next : problem.getSuccessors(currentState)) {
+            for (Pair<MoveAction, PassengerState> next : problem.getSuccessors(currentState, currentPath)) {
                 List<Pair<MoveAction, PassengerState>> clonedPath = clonePath(currentPath);
                 clonedPath.add(next);
                 queue.add(clonedPath);
