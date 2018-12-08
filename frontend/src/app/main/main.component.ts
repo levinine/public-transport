@@ -176,6 +176,7 @@ export class MainComponent implements OnInit {
     this.clearRoutes();
     this.clearModel(this.model.startDestination);
     this.clearModel(this.model.endDestination);
+    this.model.dateTime = new Date();
   }
 
   clearMarker(markerName: string) {
@@ -342,11 +343,11 @@ export class MainComponent implements OnInit {
       this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
     }
     // uncomment when API returns stops
-    
-    // for(let i=0; i<line.stops.length; i++) {
-    //   this.drawBusStation(line.stops[i].lon, line.stops[i].lat, '');
-    // }
+    if(line.stops) {
+      for(let i=0; i<line.stops.length; i++) {
+        this.drawBusStation(line.stops[i].lon, line.stops[i].lat, '');
+      }
+    }
   }
-
 
 }
