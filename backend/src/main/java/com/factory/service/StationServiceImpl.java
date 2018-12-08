@@ -179,25 +179,28 @@ public class StationServiceImpl implements StationService {
         return result;
     }
 
+    private static final long DAY = 24 * 3600 * 1000;
     @Override
     public double getWaitTime(long currentTime, Line line, Stop station) {
+    	final Long offset = lineToStationTime.get(line.getName()).get(station.getName());
         for (String timetableTime : line.getTimeTable()) {
             Double timetableTimeInMillis = getTimetableTimeInMillis(timetableTime);
-
-            if (currentTime < lineToStationTime.get(line.getName()).get(station.getName()) + timetableTimeInMillis.longValue()) {
-                return (lineToStationTime.get(line.getName()).get(station.getName())
-                        + timetableTimeInMillis.longValue()
-                        - currentTime) / 3600000.00;
+			if (currentTime < offset + timetableTimeInMillis.longValue()) {
+                return (offset + timetableTimeInMillis.longValue() - currentTime) / 3_600_000.00;
             }
         }
-        return 0;
+        
+        String timetableTime = line.getTimeTable().get(0);
+        long timetableTimeInMillis = getTimetableTimeInMillis(timetableTime).longValue();
+        final double wrapped = (offset + timetableTimeInMillis - currentTime + DAY) / 3_600_000.00;
+		return wrapped;
     }
 
-    private Double getTimetableTimeInMillis(String timetableTime) {
+    private static Double getTimetableTimeInMillis(String timetableTime) {
         String[] timeParts = timetableTime.split(":");
         int hour = Integer.valueOf(timeParts[0]);
         int minutes = Integer.valueOf(timeParts[1]);
-        return (hour + minutes / 60.0) * 3600000;
+        return (60 * hour + minutes) * 60_000D;
     }
 
     @Override
