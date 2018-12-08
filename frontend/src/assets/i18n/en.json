@@ -11,8 +11,8 @@
     "main.directions": "Directions",
     "main.submit": "Submit",
     "main.clear": "Clear",
-    "line.title": "Walking",
-    "a.title": "City lines",
+    "main.lines": "Lines",
+    "line.title": "City lines",
     "suggestedRoutes.title": "Suggested routes",
     "suggestedRoutes.info": "Selected route: Route ",
     "suggestedRoutes.totalCost": "Total cost"
