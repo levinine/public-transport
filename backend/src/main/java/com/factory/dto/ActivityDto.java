@@ -21,9 +21,11 @@ public class ActivityDto {
     @JsonProperty(RestApiConstants.START_COORDINATE)
     private CoordinateDto startCoordinate;
 
-
     @JsonProperty(RestApiConstants.END_COORDINATE)
     private CoordinateDto endCoordinate;
+
+    @JsonProperty(RestApiConstants.PATH_COORDINATES)
+    private List<CoordinateDto> pathCoordinates;
 
     @JsonProperty(RestApiConstants.ESTIMATED_TIME)
     private double estimatedTime;
