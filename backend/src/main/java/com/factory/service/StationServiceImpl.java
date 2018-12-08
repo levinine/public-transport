@@ -316,6 +316,7 @@ public class StationServiceImpl implements StationService {
             lineDto.setName(line.getName());
             lineDto.setDescription(line.getDescription());
             line.getCoordinates().stream().forEach(coordinate -> lineDto.getCoordinates().add(new CoordinateDto(Double.parseDouble(coordinate.getLat()), Double.parseDouble(coordinate.getLon()))));
+            stationIndexByLine.get(line.getName()).stream().forEach(stop -> lineDto.getStops().add(new CoordinateDto(Double.parseDouble(stop.getLat()), Double.parseDouble(stop.getLon()))));
             return lineDto;
         }).collect(Collectors.toList());
     }
