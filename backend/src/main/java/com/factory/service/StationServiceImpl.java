@@ -247,46 +247,49 @@ public class StationServiceImpl implements StationService {
 
                if (moveAction instanceof PublicTransportAction) {
 
-                   Line line = cityData.getLines().stream().filter(
-                           l -> l.getName().equals(action.getKey().getLineNumber())
-                   ).findFirst().get();
+                   try {
+                       Line line = cityData.getLines().stream().filter(
+                               l -> l.getName().equals(action.getKey().getLineNumber())
+                       ).findFirst().get();
 
+                       Coordinate startCoordinate = new Coordinate(moveAction.getStartLat(), moveAction.getStartLon());
+                       Coordinate endCoordinate = new Coordinate(moveAction.getEndLat(), moveAction.getEndLon());
 
-                   Coordinate startCoordinate = new Coordinate(moveAction.getStartLat(), moveAction.getStartLon());
-                   Coordinate endCoordinate = new Coordinate(moveAction.getEndLat(), moveAction.getEndLon());
+                       // In case that coordinates of stations are included in the route data
+                       // int start = line.getCoordinates().indexOf(startCoordinate);
+                       // int end = line.getCoordinates().indexOf(endCoordinate);
 
-                   // In case that coordinates of stations are included in the route data
-                   // int start = line.getCoordinates().indexOf(startCoordinate);
-                   // int end = line.getCoordinates().indexOf(endCoordinate);
+                       // Otherwise find the one with the shortest distance from the actual station
+                       final Comparator<Coordinate> compStart = Comparator.comparingDouble(c ->
+                               Util.distance(c.getLat(), c.getLon(), moveAction.getStartLat(), moveAction.getStartLon()));
 
-                   // Otherwise find the one with the shortest distance from the actual station
-                   final Comparator<Coordinate> compStart = Comparator.comparingDouble(c ->
-                           Util.distance(c.getLat(), c.getLon(), moveAction.getStartLat(), moveAction.getStartLon()));
+                       final Comparator<Coordinate> compEnd = Comparator.comparingDouble(c ->
+                               Util.distance(c.getLat(), c.getLon(), moveAction.getEndLat(), moveAction.getEndLon()));
 
-                   final Comparator<Coordinate> compEnd = Comparator.comparingDouble(c ->
-                           Util.distance(c.getLat(), c.getLon(), moveAction.getEndLat(), moveAction.getEndLon()));
+                       Coordinate nearestStartCoordinate = line.getCoordinates().stream()
+                               .min(compStart)
+                               .get();
 
-                   Coordinate nearestStartCoordinate = line.getCoordinates().stream()
-                           .min(compStart)
-                           .get();
+                       Coordinate nearestEndCoordinate = line.getCoordinates().stream()
+                               .min(compEnd)
+                               .get();
 
-                   Coordinate nearestEndCoordinate = line.getCoordinates().stream()
-                           .min(compEnd)
-                           .get();
+                       int start = line.getCoordinates().indexOf(nearestStartCoordinate);
+                       int end = line.getCoordinates().indexOf(nearestEndCoordinate);
 
-                   int start = line.getCoordinates().indexOf(nearestStartCoordinate);
-                   int end = line.getCoordinates().indexOf(nearestEndCoordinate);
-
-                   if ((start != -1 && end != -1)) {
-                       // Because coordinates of stations are not included in line coordinates
-                       action.getKey().setMoveActionPath(new ArrayList<Coordinate>(){{add(startCoordinate);}});
-                       action.getKey().getMoveActionPath().addAll(line.getCoordinates().subList(start, end));
-                       action.getKey().getMoveActionPath().add(endCoordinate);
-                   } else {
-                       action.getKey().setMoveActionPath(Arrays.asList(startCoordinate, endCoordinate));
+                       List<Coordinate> moveActionPath = new ArrayList<>();
+                       moveActionPath.add(startCoordinate);
+                       if (start != -1 && end != -1) {
+                           moveActionPath.addAll(line.getCoordinates().subList(start, end + 1));
+                       }
+                       moveActionPath.add(endCoordinate);
+                       moveAction.setMoveActionPath(moveActionPath);
+                   } catch (Exception e) {
+                       System.out.println("failed to calculate moveActionPath");
+                       moveAction.setMoveActionPath(new ArrayList<>());
                    }
-               }
 
+               }
            });
         });
 
