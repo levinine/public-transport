@@ -1,0 +1,19 @@
+{
+    "main.title": "Public transport",
+    "main.start": "Pocetak",
+    "main.start.placeholder": "Odaberi pocetnu tacku",
+    "main.end": "Kraj",
+    "main.end.placeholder": "Odaberi destinaciju",
+    "main.time": "Vreme",
+    "main.legend": "Legenda",
+    "main.bus": "Autobus",
+    "main.walking": "Setanje",
+    "main.directions": "Pravci",
+    "main.submit": "Trazi",
+    "main.clear": "Ocisti",
+    "main.lines": "Linije",
+    "line.title": "Autobuske linije",
+    "suggestedRoutes.title": "Predlozene rute",
+    "suggestedRoutes.info": "Selektovana ruta: Ruta ",
+    "suggestedRoutes.totalCost": "Ukupna cena"
+}

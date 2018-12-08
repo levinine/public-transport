@@ -148,6 +148,14 @@ img {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+.flags {
+	position: absolute;
+	top: 2%;
+	right: 2%;
+}
+.flags img {
+	padding: 0 5px;
+}
 @media(max-width: 767px) {
 	.map {
 		height: 70vh;
