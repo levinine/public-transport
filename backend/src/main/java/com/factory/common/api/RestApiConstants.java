@@ -14,4 +14,5 @@ public class RestApiConstants {
     public static final String PREDICTED_DEPARTURE_TIMES = "predictedDepartureTimes";
     public static final String ROUTES = "routes";
     public static final String TOTAL_COST = "totalCost";
+    public static final String PATH_COORDINATES = "pathCoordinates";
 }

@@ -1,10 +1,13 @@
 package com.factory.problem.action;
 
+import com.factory.model.Coordinate;
 import com.factory.problem.state.PassengerState;
 import com.factory.service.StationService;
 import com.factory.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -29,6 +32,8 @@ public abstract class MoveAction {
     protected String endingStation;
 
     protected Double price;
+
+    protected List<Coordinate> moveActionPath;
 
     public PassengerState execute(PassengerState state) {
         PassengerState newState = (PassengerState) state.clone();

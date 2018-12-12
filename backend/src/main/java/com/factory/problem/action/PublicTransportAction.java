@@ -14,7 +14,7 @@ public class PublicTransportAction extends MoveAction {
 
     public PublicTransportAction(StationService stationService, String description, String startLat, String startLon,
                                  String endLat, String endLon, Line line, String startingStation, String endingStation, Double zonePrice) {
-        super(stationService, description, startLat, startLon, endLat, endLon, line.getName(), startingStation, endingStation, zonePrice);
+        super(stationService, description, startLat, startLon, endLat, endLon, line.getName(), startingStation, endingStation, zonePrice, null);
         this.line = line;
     }
 

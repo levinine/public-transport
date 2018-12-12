@@ -32,22 +32,28 @@ public class TransportProblem {
         return state.getLat().equals(endLat) && state.getLon().equals(endLon);
     }
 
-    public List<Pair<MoveAction, PassengerState>> getSuccessors(PassengerState state) {
+    public List<Pair<MoveAction, PassengerState>> getSuccessors(PassengerState state, List<Pair<MoveAction, PassengerState>> currentPath) {
         List<Pair<MoveAction, PassengerState>> result = new ArrayList<>();
         addWalkSuccessors(state, result);
-        addPublicTransportSuccessors(state, result);
+        addPublicTransportSuccessors(state, result, currentPath);
         return result;
     }
 
-    private void addPublicTransportSuccessors(PassengerState state, List<Pair<MoveAction, PassengerState>> result) {
+    private void addPublicTransportSuccessors(PassengerState state, List<Pair<MoveAction, PassengerState>> result, List<Pair<MoveAction, PassengerState>> currentPath) {
         if (state.getStation() != null) {
             stationService.findByStartingStation(state.getStation()).forEach(lineStop -> {
-                MoveAction action = new PublicTransportAction(stationService,
-                        String.format("Ride from station [%s], to station [%s], on line [%s]",
-                                state.getStation().getName(), lineStop.getValue().getName(), lineStop.getKey().getName()),
-                        state.getLat(), state.getLon(), lineStop.getValue().getLat(), lineStop.getValue().getLon(), lineStop.getKey(),
-                        state.getStation().getName(), lineStop.getValue().getName(), stationService.getZoneCost(lineStop.getValue().getZone()));
+                final Stop nextStop = lineStop.getValue();
+				final String description = String.format("Ride from station [%s], to station [%s], on line [%s]",
+				        state.getStation().getName(), nextStop.getName(), lineStop.getKey().getName());
+				MoveAction action = new PublicTransportAction(stationService, description,
+                        state.getLat(), state.getLon(), nextStop.getLat(), nextStop.getLon(), lineStop.getKey(),
+                        state.getStation().getName(), nextStop.getName(), stationService.getZoneCost(nextStop.getZone()));
                 PassengerState nextState = action.execute(state);
+                // If we walked to here, add wait time for the chosen line
+                if (currentPath.get(currentPath.size() - 1).getKey() instanceof WalkAction) {
+                	final double waitTime = stationService.getWaitTime(startTime + state.getTimeElapsedInMillis(), lineStop.getKey(), lineStop.getValue());
+                	nextState.setTimeElapsed(nextState.getTimeElapsed() + waitTime);
+                }
                 result.add(new Pair<>(action, nextState));
             });
         }

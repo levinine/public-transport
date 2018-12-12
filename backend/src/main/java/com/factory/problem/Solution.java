@@ -16,6 +16,7 @@ import org.apache.commons.math3.util.Precision;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 public class Solution {
@@ -97,6 +98,10 @@ public class Solution {
         activityDto.setEndCoordinate(new CoordinateDto(Double.parseDouble(endingStation.getEndLat()), Double.parseDouble(endingStation.getEndLon())));
         activityDto.setNumberOfStations(numberOfStations);
         activityDto.setType(2);
+        activityDto.setPathCoordinates(startingStation.getMoveActionPath().stream().map(coordinate ->
+                new CoordinateDto(Double.valueOf(coordinate.getLat()), Double.valueOf(coordinate.getLon())))
+                .collect(Collectors.toList()));
+        activityDto.getPathCoordinates().add(new CoordinateDto(Double.parseDouble(endingStation.getEndLat()), Double.parseDouble(endingStation.getEndLon())));
         return activityDto;
     }
 
