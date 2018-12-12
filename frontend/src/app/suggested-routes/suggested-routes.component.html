@@ -1,8 +1,8 @@
 <div class="title">
-  <label>Suggested routes</label>
+  <label>{{'suggestedRoutes.title' | translate}}</label>
 </div>
 <div class="selected-route-info">
-  <label>Selected route: Route {{selectedIndex+1}}</label>
+  <label>{{'suggestedRoutes.info' | translate}} {{selectedIndex+1}}</label>
 </div>
 <div id="routes">
   <div *ngFor="let route of routes; index as i" (click) = "changeRoute(i)">
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="cost">
-        <span>Total cost: {{route.totalCost}}</span>
+        <span>{{'suggestedRoutes.totalCost' | translate}}: {{route.totalCost}}</span>
       </div>
     </div>
   </div>
