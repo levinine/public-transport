@@ -26,7 +26,7 @@ import Fill from 'ol/style/Fill';
 const START_DESTINATION = 'startDestination';
 const END_DESTINATION = 'endDestination';
 const MOBILE_DEVICE = 'mobile';
-const DESKTOP_DEVICE = 'device';
+const DESKTOP_DEVICE = 'desktop';
 
 @Component({
   selector: 'app-main',
@@ -74,10 +74,11 @@ export class MainComponent implements OnInit {
 
   ngOnInit() {
     let vm = this;
-    this.chooseStateForSidebar();
 
-    this.layoutService.toggleSidebarEmmiter.subscribe(result => {
-      this.showSidebar = this.sidebarState == MOBILE_DEVICE ? result : null;
+    // manage sidebar animations (true-show, false-hide, null-display initial)
+    vm.chooseStateForSidebar();
+    vm.layoutService.toggleSidebarEmmiter.subscribe(result => {
+      vm.showSidebar = vm.sidebarState == MOBILE_DEVICE ? result : null;
     })
 
     // create map and set initial layers
@@ -110,7 +111,7 @@ export class MainComponent implements OnInit {
           vm.drawMarker(args.coordinate, END_DESTINATION);
           vm.searchService.getAddressFromCoords(lonlat).subscribe(result => {
             vm.setModel(vm.model.endDestination, result);
-            // open sidebar if mobile view is active
+            // open sidebar when start and end points have been selected and mobile view is active 
             if(vm.sidebarState == MOBILE_DEVICE) {
               vm.layoutService.toggleSidebar();
             }
@@ -125,14 +126,15 @@ export class MainComponent implements OnInit {
     });
   }
 
-  chooseStateForSidebar() {
-    this.sidebarState = window.innerWidth < 991 ? MOBILE_DEVICE : DESKTOP_DEVICE;
-    this.showSidebar = this.sidebarState == MOBILE_DEVICE ? this.showSidebar : null;
-  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.chooseStateForSidebar();
+  }
+
+  chooseStateForSidebar() {
+    this.sidebarState = window.innerWidth < 991 ? MOBILE_DEVICE : DESKTOP_DEVICE;
+    this.showSidebar = this.sidebarState == MOBILE_DEVICE ? this.showSidebar : null;
   }
   
   changeTab(tabname: string): void {
