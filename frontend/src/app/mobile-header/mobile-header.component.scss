@@ -1,0 +1,16 @@
+@import '../../variables.scss';
+.header {
+    height: 60px;
+    width: 100vw;
+    background-color: $main-color;
+    display: flex;
+    padding: 10px 15px;
+    margin: 0 15px;
+    position: fixed;
+    z-index: 5;
+    border-bottom: 1px solid white;
+}
+.header-item {
+    margin-right: 20px;
+    padding: 6px 0;
+}

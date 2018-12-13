@@ -5,15 +5,17 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { MainComponent } from './main/main.component';
-import { SuggestedRoutesComponent } from './suggested-routes/suggested-routes.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
-import { LinesComponent } from './lines/lines.component';
-
 // import ngx-translate
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+import { LinesComponent } from './lines/lines.component';
+import { AppComponent } from './app.component';
+import { MainComponent } from './main/main.component';
+import { SuggestedRoutesComponent } from './suggested-routes/suggested-routes.component';
+import { MobileHeaderComponent } from './mobile-header/mobile-header.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
     MainComponent,
     SuggestedRoutesComponent,
     LinesComponent,
+    MobileHeaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
     OwlDateTimeModule,
     OwlNativeDateTimeModule,
     BrowserAnimationsModule,
+    NgxSpinnerModule,
     TranslateModule.forRoot({
       loader: {
           provide: TranslateLoader,
