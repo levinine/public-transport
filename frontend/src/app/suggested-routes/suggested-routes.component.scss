@@ -12,14 +12,17 @@ img {
 }
 .route {
 	padding: 40px 0 40px 10px;
-	border-bottom: 1px solid $border-color;
+	border: 1px solid $border-color;
 	color: #404040;
-	margin: 0;
+	margin: 3px;
+	border-radius: 5px;
 	position: relative;
 }
-#routes > div:hover {
+#routes > div .route:hover {
 	background-color:#eaeaea;
+	position: relative;
 	cursor: pointer;
+	border-radius: 5px;
 }
 .selected {
   background-color: #DBE1F5;

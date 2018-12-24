@@ -2,6 +2,7 @@
 
 .content {
 	margin: 0;
+	height: 100vh;
 }
 .map {
 	height: 100vh;
@@ -16,6 +17,7 @@
 	padding-right: 0px;
 	height: 100vh;
 	overflow-y: scroll;
+	border-right: 1px solid $border-color;
 }
 .main {
 	color: white;
@@ -32,6 +34,7 @@
 	border-radius: 5px;
 	width: 100%; 
 	margin: 0 auto;
+	position: relative;
 }
 .menu {
 	background-color: inherit;
@@ -150,20 +153,58 @@ img {
 }
 .flags {
 	position: absolute;
-	top: 2%;
+	top: 5%;
 	right: 2%;
 }
 .flags img {
 	padding: 0 5px;
 }
-@media(max-width: 767px) {
-	.map {
-		height: 70vh;
-	}
-	.sidebar-content  {
-		height: 100%;
-	}
+.mobile-header {
+	display: none;
+}
+.sidebar-close-animation {
+	transform: translate(-100%, 0);
+	transition: all 1s;
+}
+.sidebar-open-animation {
+	transform: translate(0, 0);
+	transition: all 1s;
+}
+::-webkit-scrollbar {
+	display: none;
+}
+.bus-routes-mobile {
+	display: none;
+}
+@media(max-width: 991px) {
 	.legend {
 		display: none;
+	}
+	.mobile-header {
+		display: inline-block;
+	}
+	.sidebar-content {
+		position: absolute;
+		top: 60px;
+		left: 0;
+		z-index: 1;
+		background-color: white;
+		border-right: none;
+		height: calc(100vh - 60px);
+
+	}
+	.bus-routes-mobile {
+		position: absolute;
+		right: 0;
+		top: 60px;
+		background-color: white;
+		padding: 5px;
+		z-index: 1;
+		border-radius: 5px; 
+		color: #666;
+		display: grid;
+	}
+	.selected-route {
+		color: $main-color;
 	}
 }

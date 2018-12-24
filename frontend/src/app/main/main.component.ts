@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+
 import { RoutesService } from '../routes.service';
 import { SearchService } from '../search.service';
-import {TranslateService} from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { LayoutService } from '../layout.service';
 
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -22,6 +25,8 @@ import Fill from 'ol/style/Fill';
 
 const START_DESTINATION = 'startDestination';
 const END_DESTINATION = 'endDestination';
+const MOBILE_DEVICE = 'mobile';
+const DESKTOP_DEVICE = 'desktop';
 
 @Component({
   selector: 'app-main',
@@ -30,12 +35,16 @@ const END_DESTINATION = 'endDestination';
 })
 export class MainComponent implements OnInit {
 
+  showSidebar = true;
+  sidebarState: string;
+
   // Novi Sad coordinates
   latitude: number = 45.26060794;
   longitude: number = 19.83221305;
-  zoomSize: number = 14;
+  zoomSize: number = 13;
 
   routes = null;
+  selectedRoute: number;
   startDestinationAddresses = [];
   endDestinationAddresses = [];
 
@@ -61,10 +70,17 @@ export class MainComponent implements OnInit {
   map: any;
   vectorSource = new VectorSource()
 
-  constructor(private routesService: RoutesService, private searchService: SearchService, private translate: TranslateService) { }
+  constructor(private routesService: RoutesService, private searchService: SearchService, private translate: TranslateService, private layoutService: LayoutService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    let vm = this
+    let vm = this;
+
+    // manage sidebar animations (true-show, false-hide, null-display initial)
+    vm.chooseStateForSidebar();
+    vm.layoutService.toggleSidebarEmmiter.subscribe(result => {
+      vm.showSidebar = vm.sidebarState == MOBILE_DEVICE ? result : null;
+    })
+
     // create map and set initial layers
     vm.map = new Map({
       target: 'map',
@@ -95,7 +111,10 @@ export class MainComponent implements OnInit {
           vm.drawMarker(args.coordinate, END_DESTINATION);
           vm.searchService.getAddressFromCoords(lonlat).subscribe(result => {
             vm.setModel(vm.model.endDestination, result);
-
+            // open sidebar when start and end points have been selected and mobile view is active 
+            if(vm.sidebarState == MOBILE_DEVICE) {
+              vm.layoutService.toggleSidebar();
+            }
           });
         }
       } else if(vm.showLines) {
@@ -107,6 +126,17 @@ export class MainComponent implements OnInit {
     });
   }
 
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.chooseStateForSidebar();
+  }
+
+  chooseStateForSidebar() {
+    this.sidebarState = window.innerWidth < 991 ? MOBILE_DEVICE : DESKTOP_DEVICE;
+    this.showSidebar = this.sidebarState == MOBILE_DEVICE ? this.showSidebar : null;
+  }
+  
   changeTab(tabname: string): void {
     this.showDirections = tabname == 'directions' ? true : false;
     this.showLines = tabname == 'directions' ? false : true;
@@ -118,11 +148,15 @@ export class MainComponent implements OnInit {
 
   getRoutes() {
     // get optimal routes from backend
+    this.spinner.show();
     this.routesService.getRoutes(this.model).subscribe(
       data => {
         this.routes = data.routes;
         this.clearLinesAndStations();
         this.drawRoute(0);
+        this.selectedRoute = 0;
+        this.layoutService.toggleSidebar();
+        this.spinner.hide();
       },
       error => {
         console.log(error)
@@ -340,10 +374,14 @@ export class MainComponent implements OnInit {
     vm.clearLinesAndStations();
     // draw new route
     this.drawRoute(routeIndex);
+    this.selectedRoute = routeIndex;
+    if (this.showSidebar == true) {
+      this.layoutService.toggleSidebar();
+    }
   }
 
   onBusLineSelection(line: any) {
-    this.clearMap(); // ili brisi redom iz vector source kao u onRouteSelection method
+    this.clearMap();
     for(let i=0; i<line.coordinates.length-1; i++) {
       this.drawLine(fromLonLat([line.coordinates[i].lon, line.coordinates[i].lat]), fromLonLat([line.coordinates[i+1].lon, line.coordinates[i+1].lat]), 2);
     }
@@ -352,6 +390,7 @@ export class MainComponent implements OnInit {
         this.drawBusStation(line.stops[i].lon, line.stops[i].lat, '');
       }
     }
+    this.layoutService.toggleSidebar();
   }
 
   useLanguage(language: string) {

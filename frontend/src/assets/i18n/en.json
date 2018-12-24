@@ -12,6 +12,7 @@
     "main.submit": "Submit",
     "main.clear": "Clear",
     "main.lines": "Lines",
+    "main.route": "Route",
     "line.title": "City lines",
     "suggestedRoutes.title": "Suggested routes",
     "suggestedRoutes.info": "Selected route: Route ",

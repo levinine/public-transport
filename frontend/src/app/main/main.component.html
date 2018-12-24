@@ -1,5 +1,10 @@
+<div class="row">
+  <div class="col-12" class="mobile-header">
+    <app-mobile-header></app-mobile-header>
+  </div>
+</div>
 <div class="row content">
-  <div class="col-12 col-md-3 sidebar-content">
+  <div class="col-12 col-lg-3 sidebar-content" [class.sidebar-close-animation]="showSidebar == false" [class.sidebar-open-animation]="showSidebar">
     <div class="main">
       <div class="header">
         <div>
@@ -73,10 +78,11 @@
       </div>
       <hr>
     </div>
+    <ngx-spinner bdColor = "rgba(51, 51, 51, 0.8)" size = "default" color = "#fff" type = "ball-clip-rotate-multiple"></ngx-spinner>
     <app-suggested-routes *ngIf="routes != null && showDirections" [routes]="routes" (selectRoute)="onRouteSelection($event)"></app-suggested-routes>
     <app-lines *ngIf="showLines" (selectLine)="onBusLineSelection($event)"></app-lines>
   </div>
-  <div class="col-12 col-md-9 map-content">
+  <div class="col-12 col-lg-9 map-content">
     <div class="legend">
       <div class="legend-title">
         <span>{{'main.legend' | translate}}:</span>
@@ -86,6 +92,13 @@
       </div>
       <div class="legend-walking">
         <span>{{'main.walking' | translate}}</span>
+      </div>
+    </div>
+    <div class="bus-routes-mobile" *ngIf="routes && showSidebar == false">
+      <div *ngFor="let route of routes; index as i" class="bus-route" [class.selected-route]="selectedRoute==i" (click)="onRouteSelection(i)">
+        <span>
+          {{'main.route' | translate}}: {{i+1}}
+        </span>
       </div>
     </div>
     <div id="map" class="map"></div>
